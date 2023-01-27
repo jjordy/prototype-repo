@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int        @id @default(autoincrement())
+  email            String     @unique
+  name             String?
+  phone_number     String?
+  address_1        String?
+  address_2        String?
+  city             String?
+  state            String?
+  zip_code         String?
+  owned_tickets    Ticket[]
+  assigned_tickets Ticket[]   @relation(name: "AssigneeOfTicket")
+  comments         Comment[]
+}
+
+model Ticket {
+  id          Int        @id @default(autoincrement())
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  title       String
+  content     String?
+  status      Status     @default(TODO)
+  assignee    User?      @relation(name: "AssigneeOfTicket", fields: [assignee_id], references: [id])
+  assignee_id Int?
+  author      User?      @relation(fields: [author_id], references: [id])
+  author_id   Int?
+  comments    Comment[]
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  content    String
+  author     User?    @relation(fields: [author_id], references: [id])
+  author_id  Int?
+  ticket     Ticket   @relation(fields: [ticket_id], references: [id])
+  ticket_id  Int
+}
+
+enum Status {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+}

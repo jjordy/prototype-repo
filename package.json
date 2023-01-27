@@ -1,0 +1,23 @@
+{
+  "name": "@jjordy/prototype-repo",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test"
+  },
+  "keywords": [],
+  "author": "Jordan Addison <jordanrileyaddison@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "prettier": "2.8.3",
+    "turbo": "^1.7.0"
+  }
+}
