@@ -49,11 +49,12 @@ function main() {
                         create: {
                             email: "alice@prisma.io",
                             name: "Alice",
-                            posts: {
+                            address_1: "test",
+                            zip_code: "39507",
+                            owned_tickets: {
                                 create: {
-                                    title: "Check out Prisma with Next.js",
-                                    content: "https://www.prisma.io/nextjs",
-                                    published: true
+                                    title: "Ticket 1",
+                                    status: "TODO"
                                 }
                             }
                         }
@@ -65,21 +66,7 @@ function main() {
                             update: {},
                             create: {
                                 email: "bob@prisma.io",
-                                name: "Bob",
-                                posts: {
-                                    create: [
-                                        {
-                                            title: "Follow Prisma on Twitter",
-                                            content: "https://twitter.com/prisma",
-                                            published: true
-                                        },
-                                        {
-                                            title: "Follow Nexus on Twitter",
-                                            content: "https://twitter.com/nexusgql",
-                                            published: true
-                                        },
-                                    ]
-                                }
+                                name: "Bob"
                             }
                         })];
                 case 2:

@@ -11,7 +11,7 @@ async function main() {
       name: "Alice",
       address_1: "test",
       zip_code: "39507",
-      tickets: {
+      owned_tickets: {
         create: {
           title: "Ticket 1",
           status: "TODO",
