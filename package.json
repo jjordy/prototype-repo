@@ -3,12 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo build",
+    "clean": "turbo clean",
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx}\"",
     "lint": "turbo lint",
@@ -18,7 +15,11 @@
   "author": "Jordan Addison <jordanrileyaddison@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "eslint": "^7.32.0",
+    "@jjordy/eslint-config-custom": "workspace:*",
     "prettier": "2.8.3",
+    "prettier-plugin-tailwindcss": "^0.1.11",
     "turbo": "^1.7.0"
-  }
+  },
+  "packageManager": "pnpm@7.15.0"
 }
