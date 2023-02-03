@@ -19,8 +19,8 @@
   "author": "Jordan Addison <jordanrileyaddison@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "eslint": "^7.32.0",
     "@jjordy/eslint-config-custom": "*",
+    "eslint": "^7.32.0",
     "prettier": "2.8.3",
     "prettier-plugin-tailwindcss": "^0.1.11",
     "turbo": "^1.7.0"

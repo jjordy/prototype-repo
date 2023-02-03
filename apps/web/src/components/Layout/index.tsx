@@ -1,5 +1,5 @@
 import Link from "next/link";
-import useUser from "../../hooks/useUser";
+import useAuth from "../../hooks/useAuth";
 import s from "./index.module.css";
 
 type LayoutProps = {
@@ -7,7 +7,8 @@ type LayoutProps = {
 };
 
 export default function Layout({ children }: LayoutProps) {
-  const user = useUser();
+  const { authenticated, user } = useAuth();
+  console.log(authenticated, user);
   return (
     <div className={s.wrapper}>
       <nav className={s.nav}>

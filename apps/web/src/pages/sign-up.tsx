@@ -1,7 +1,21 @@
+import { useCallback } from "react";
 import { Card } from "@jjordy/ui";
+import { useForm } from "react-hook-form";
 import Layout from "../components/Layout";
+import { api } from "../lib";
 
-export default function IndexPage() {
+export default function SignUpPage() {
+  const { handleSubmit, register } = useForm();
+  const signin = useCallback((values: any) => {
+    api
+      .post("/sign-up", values)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <Layout>
       <div className="flex justify-center items-center">
@@ -14,6 +28,20 @@ export default function IndexPage() {
             voluptatum fugiat rerum facere quibusdam, in cum deleniti nobis.
             Quae, ipsam!
           </p>
+          <form onSubmit={handleSubmit(signin)}>
+            <input
+              type="email"
+              {...register("email")}
+              className="border w-full mb-2 text-black"
+            />
+            <br />
+            <input
+              type="password"
+              {...register("password")}
+              className="border w-full mb-2 text-black"
+            />
+            <button>Submit</button>
+          </form>
         </Card>
       </div>
     </Layout>

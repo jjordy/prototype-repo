@@ -2,6 +2,7 @@
   "extends": "@jjordy/tsconfig/nextjs.json",
   "include": [
     "next-env.d.ts",
+    "environment.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
