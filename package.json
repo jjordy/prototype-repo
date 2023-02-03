@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "build": "turbo build",
     "clean": "turbo clean",
@@ -20,6 +24,5 @@
     "prettier": "2.8.3",
     "prettier-plugin-tailwindcss": "^0.1.11",
     "turbo": "^1.7.0"
-  },
-  "packageManager": "pnpm@7.15.0"
+  }
 }

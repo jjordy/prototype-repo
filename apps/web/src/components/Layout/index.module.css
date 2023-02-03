@@ -1,0 +1,6 @@
+.nav {
+  @apply h-10 bg-white shadow border-b-2;
+}
+
+.content {
+}
