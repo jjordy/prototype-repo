@@ -1,6 +1,11 @@
 .nav {
-  @apply h-10 bg-white shadow border-b-2;
+  @apply flex items-center h-16 fixed w-full font-semibold text-white;
 }
 
 .content {
+  @apply h-screen container mx-auto pt-20;
+}
+
+.wrapper {
+  @apply bg-gradient-to-tr from-pink-400 to-sky-600;
 }

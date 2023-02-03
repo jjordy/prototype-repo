@@ -9,11 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@jjordy/data": "*",
+    "@jjordy/ui": "*",
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@jjordy/data": "*",
-    "@jjordy/ui": "*"
+    "react-hook-form": "7.43.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.17",
