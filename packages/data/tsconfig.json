@@ -10,6 +10,8 @@
     "esModuleInterop": true
   },
   "include": [
-    "./src"
+    "./src",
+    "../../apps/web/src/lib/User.ts",
+    "../../apps/web/src/lib/Base.ts"
   ]
 }

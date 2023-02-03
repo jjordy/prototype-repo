@@ -11,6 +11,7 @@
   "dependencies": {
     "@jjordy/data": "*",
     "@jjordy/ui": "*",
+    "classnames": "2.3.2",
     "jsonwebtoken": "^9.0.0",
     "next": "latest",
     "react": "^18.2.0",

@@ -2,11 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import client from "@jjordy/data";
 import { decodeToken } from "@/lib/auth";
+import { useRestrictToMethod } from "@/lib/api";
+import { User } from "@/lib/User";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { cookies } = req;
   const { JWT_SECRET } = process.env;
   if (
@@ -16,22 +15,12 @@ export default async function handler(
   ) {
     const token = decodeToken(cookies["token"]);
     if (token?.sub) {
-      const user = await client.user.findFirst({
-        where: { id: token.sub },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          address_1: true,
-          address_2: true,
-          city: true,
-          state: true,
-          zip_code: true,
-          phone_number: true,
-        },
-      });
-      return res.json(user);
+      const user = new User(token.sub);
+      const profile = await user.profile();
+      return res.json(profile);
     }
   }
   return res.status(401).end();
 }
+
+export default useRestrictToMethod("GET", handler);

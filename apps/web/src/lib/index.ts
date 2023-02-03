@@ -1,3 +1,5 @@
+import { IncomingHttpHeaders } from "http";
+
 type REQUEST_TYPES = "get" | "post" | "put" | "patch" | "delete";
 
 const requests = ["get", "post", "put", "patch", "delete"];
@@ -49,7 +51,9 @@ const fetchData = async (
           const errors = await response.json();
           throw errors;
         } catch {
-          throw new Error("Unable to parse error response.");
+          throw new Error(
+            `Fetch::NoResponseJSON: ${response.status} - ${response.statusText}`
+          );
         }
       }
     }
@@ -61,3 +65,18 @@ const fetchData = async (
     }
   }
 };
+
+export function parseCookies<T = Record<string, string>>(
+  headers: IncomingHttpHeaders
+) {
+  const items = headers?.cookie?.split(";");
+  if (items) {
+    const pairs = items.reduce<Record<string, string>>((acc, curr) => {
+      const [one, two] = curr.split("=");
+      acc[one] = two;
+      return acc;
+    }, {});
+    return pairs;
+  }
+  return {};
+}

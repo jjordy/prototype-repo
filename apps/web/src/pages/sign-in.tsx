@@ -1,11 +1,14 @@
 import { useCallback } from "react";
-import { Card } from "@jjordy/ui";
+import { Card, Button, Input } from "@jjordy/ui";
 import { useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
 import { api } from "@/lib";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { useSWRConfig } from "swr";
 
 export default function SignUpPage() {
+  const { mutate } = useSWRConfig();
   const { push } = useRouter();
   const { handleSubmit, register } = useForm();
   const signin = useCallback((values: any) => {
@@ -13,6 +16,7 @@ export default function SignUpPage() {
       .post("/sign-in", values)
       .then(({ path }) => {
         if (path) {
+          mutate("/auth");
           push(path);
         }
       })
@@ -22,29 +26,41 @@ export default function SignUpPage() {
   }, []);
   return (
     <Layout>
-      <div className="flex items-center justify-center">
-        <Card className="max-w-2xl">
+      <div className="flex min-h-[750px] items-center justify-center">
+        <Card className="max-w-xl">
           <h1 className="text-4xl tracking-wide">Sign in</h1>
           <hr className="my-4" />
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel quo eum
-            tempore aut nostrum eligendi repellat tenetur quis, autem,
-            voluptatum fugiat rerum facere quibusdam, in cum deleniti nobis.
-            Quae, ipsam!
+          <p className="mb-4">
+            <strong>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quidem
+              temporibus iusto repellat quas. Delectus autem beatae
+              necessitatibus incidunt totam impedit omnis, exercitationem aut
+              voluptatum, fugiat asperiores consequuntur sit debitis
+              perspiciatis?
+            </strong>
           </p>
           <form onSubmit={handleSubmit(signin)}>
-            <input
+            <Input
               type="email"
+              placeholder="johndoe@email.com"
+              label="Email"
               {...register("email")}
-              className="mb-2 w-full border text-black"
             />
-            <br />
-            <input
+            <Input
+              label="Password"
+              placeholder="**********"
               type="password"
               {...register("password")}
-              className="mb-2 w-full border text-black"
             />
-            <button>Submit</button>
+            <Button className="my-8 w-full">Submit</Button>
+            <div className="my-4 flex items-center justify-center">
+              <Link
+                href="/forgot-password"
+                className=" font-semibold text-blue-900/60"
+              >
+                Forgot Password
+              </Link>
+            </div>
           </form>
         </Card>
       </div>

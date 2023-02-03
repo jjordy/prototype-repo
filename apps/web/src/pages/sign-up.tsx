@@ -1,16 +1,23 @@
 import { useCallback } from "react";
-import { Card } from "@jjordy/ui";
+import { Card, Input, Button } from "@jjordy/ui";
 import { useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
 import { api } from "@/lib";
+import { useRouter } from "next/router";
+import { useSWRConfig } from "swr";
 
 export default function SignUpPage() {
+  const { mutate } = useSWRConfig();
   const { handleSubmit, register } = useForm();
+  const { push } = useRouter();
   const signin = useCallback((values: any) => {
     api
       .post("/sign-up", values)
-      .then((data) => {
-        console.log(data);
+      .then(({ path }) => {
+        if (path) {
+          mutate("/auth");
+          push(path);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -20,27 +27,44 @@ export default function SignUpPage() {
     <Layout>
       <div className="flex items-center justify-center">
         <Card className="max-w-2xl">
-          <h1 className="text-4xl tracking-wide">Sign up</h1>
-          <hr className="my-4" />
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel quo eum
-            tempore aut nostrum eligendi repellat tenetur quis, autem,
-            voluptatum fugiat rerum facere quibusdam, in cum deleniti nobis.
-            Quae, ipsam!
-          </p>
+          <div className="flex items-center justify-center">
+            <h1 className="text-xl font-semibold tracking-wide">Sign up</h1>
+          </div>
+          <hr className="my-8 block" />
           <form onSubmit={handleSubmit(signin)}>
-            <input
+            <Input
+              type="text"
+              {...register("name")}
+              label="Name"
+              placeholder="John Doe"
+            />
+            <Input
               type="email"
               {...register("email")}
-              className="mb-2 w-full border text-black"
+              label="Email Address"
+              placeholder="johndoe@email.com"
             />
-            <br />
-            <input
-              type="password"
-              {...register("password")}
-              className="mb-2 w-full border text-black"
+            <div className="flex w-full items-center space-x-4">
+              <Input
+                type="password"
+                {...register("password")}
+                placeholder="********"
+                label="Password"
+              />
+              <Input
+                type="password"
+                {...register("confirm_password")}
+                placeholder="********"
+                label="Confirm Password"
+              />
+            </div>
+            <Input
+              type="tel"
+              {...register("phone_number")}
+              placeholder="+1*******"
+              label="Phone Number (Optional)"
             />
-            <button>Submit</button>
+            <Button className="my-8 w-full">Sign Up</Button>
           </form>
         </Card>
       </div>

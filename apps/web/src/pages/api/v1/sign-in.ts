@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import client from "@jjordy/data";
 import { validPassword } from "@/lib/auth";
 import jwt from "jsonwebtoken";
+import { useRestrictToMethod } from "@/lib/api";
 
 type Data = {
   path: string;
@@ -11,7 +12,7 @@ type Error = {
   error: string;
 };
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | Error>
 ) {
@@ -21,6 +22,7 @@ export default async function handler(
   const user = await client.user.findFirst({
     where: { email },
   });
+
   if (
     user &&
     validPassword(password, user.hash, user.salt) &&
@@ -43,3 +45,5 @@ export default async function handler(
     res.status(404).json({ error: "User Not Found" });
   }
 }
+
+export default useRestrictToMethod("POST", handler);

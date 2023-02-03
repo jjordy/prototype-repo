@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import client from "@jjordy/data";
-import { createPasswordHash } from "@/lib/auth";
+import { useRestrictToMethod } from "@/lib/api";
 import jwt from "jsonwebtoken";
+import { User } from "@/lib/User";
 
 type Data = {
   path: string;
@@ -11,7 +12,7 @@ type Error = {
   error: string;
 };
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | Error>
 ) {
@@ -26,22 +27,14 @@ export default async function handler(
       .status(400)
       .json({ error: `User already exist for given email ${email}` });
   }
-
   if (password && process.env.JWT_SECRET) {
-    const { hash, salt } = createPasswordHash(password);
-    const user = await client.user.create({
-      data: {
-        hash,
-        salt,
-        email,
-        ...rest,
-      },
-    });
+    const user = new User({ email, password, ...rest });
+    const profile = await user.save();
     const token = jwt.sign(
       {
         email,
-        sub: user.id,
-        name: user.name,
+        sub: profile.id,
+        name: profile.name,
       },
       process.env.JWT_SECRET
     );
@@ -52,3 +45,5 @@ export default async function handler(
     res.status(200).json({ path: "/" });
   }
 }
+
+export default useRestrictToMethod("POST", handler);
