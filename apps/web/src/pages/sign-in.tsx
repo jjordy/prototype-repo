@@ -1,16 +1,20 @@
 import { useCallback } from "react";
 import { Card } from "@jjordy/ui";
 import { useForm } from "react-hook-form";
-import Layout from "../components/Layout";
-import { api } from "../lib";
+import Layout from "@/components/Layout";
+import { api } from "@/lib";
+import { useRouter } from "next/router";
 
 export default function SignUpPage() {
+  const { push } = useRouter();
   const { handleSubmit, register } = useForm();
   const signin = useCallback((values: any) => {
     api
       .post("/sign-in", values)
-      .then((data) => {
-        console.log(data);
+      .then(({ path }) => {
+        if (path) {
+          push(path);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -18,7 +22,7 @@ export default function SignUpPage() {
   }, []);
   return (
     <Layout>
-      <div className="flex justify-center items-center">
+      <div className="flex items-center justify-center">
         <Card className="max-w-2xl">
           <h1 className="text-4xl tracking-wide">Sign in</h1>
           <hr className="my-4" />
@@ -32,13 +36,13 @@ export default function SignUpPage() {
             <input
               type="email"
               {...register("email")}
-              className="border w-full mb-2 text-black"
+              className="mb-2 w-full border text-black"
             />
             <br />
             <input
               type="password"
               {...register("password")}
-              className="border w-full mb-2 text-black"
+              className="mb-2 w-full border text-black"
             />
             <button>Submit</button>
           </form>

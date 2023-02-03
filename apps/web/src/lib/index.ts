@@ -2,9 +2,7 @@ type REQUEST_TYPES = "get" | "post" | "put" | "patch" | "delete";
 
 const requests = ["get", "post", "put", "patch", "delete"];
 
-const ROOT_URL = process.env.API_URL || "/api";
-
-console.log(ROOT_URL);
+const ROOT_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 type ApiMethod = (
   url: string,

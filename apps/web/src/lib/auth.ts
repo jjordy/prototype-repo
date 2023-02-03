@@ -1,4 +1,12 @@
 import crypto from "node:crypto";
+import jwt from "jsonwebtoken";
+
+type Token = {
+  email: string;
+  iat: number;
+  sub: number;
+  name?: string;
+};
 
 export function createPasswordHash(password: string) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -14,4 +22,11 @@ export function validPassword(password: string, hash: string, salt: string) {
     .toString("hex");
   console.log(password_hash, hash);
   return password_hash === hash;
+}
+
+export function decodeToken(token: string) {
+  const decoded = jwt.decode(token);
+  if (decoded) {
+    return decoded as unknown as Token;
+  }
 }

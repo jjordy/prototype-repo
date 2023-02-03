@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import client from "@jjordy/data";
-import { createPasswordHash } from "../../lib/auth";
+import { createPasswordHash } from "@/lib/auth";
 import jwt from "jsonwebtoken";
 
 type Data = {

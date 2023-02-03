@@ -1,6 +1,6 @@
-import "../css/globals.css";
+import "@/css/globals.css";
 import "@jjordy/ui/styles.css";
-import { SWRConfig } from "swr/_internal";
+import { SWRConfig } from "swr";
 
 export default function App({ Component, pageProps }: any) {
   return (

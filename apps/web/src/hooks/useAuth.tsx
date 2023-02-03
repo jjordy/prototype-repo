@@ -1,10 +1,12 @@
-import { api } from "../lib";
+import { api } from "@/lib";
 import useSWR from "swr";
+import { Prisma } from "@jjordy/data";
+
+type User = Omit<Prisma.UserSelect, "salt" | "hash" | "_count">;
 
 export default function useAuth() {
-  const { error } = useSWR("/auth", api.get);
-  const { data: user } = useSWR(!error && "/user", api.get);
-  console.log(error);
+  const { error, isLoading } = useSWR("/auth", api.get);
+  const { data: user } = useSWR<User>(!error && !isLoading && "/user", api.get);
   return {
     authenticated: !error,
     user,
