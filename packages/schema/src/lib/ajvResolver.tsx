@@ -68,7 +68,6 @@ export const ajvResolver: Resolver =
       validateSchema: true,
       ...schemaOptions,
     });
-    console.log(schema);
     ajvFormats(ajv);
     ajvErrors(ajv);
 

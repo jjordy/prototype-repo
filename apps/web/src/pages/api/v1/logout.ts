@@ -1,19 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import jwt from "jsonwebtoken";
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { cookies } = req;
-  const { JWT_SECRET } = process.env;
-  if (
-    cookies["token"] &&
-    JWT_SECRET &&
-    jwt.verify(cookies["token"], JWT_SECRET)
-  ) {
-    res.setHeader("set-cookie", "token=; max-age=-1; samesite=strict; path=/;");
-    return res.redirect("/sign-in");
-  }
-  return res.status(401).end();
+import { useApiRequestHandler } from "@/lib/api";
+/**
+ * logout endpoint
+ * Will clear the cookie named token
+ * @param req
+ * @param res
+ * @returns redirect to sign-in
+ */
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  res.setHeader("set-cookie", "token=; max-age=-1; samesite=strict; path=/;");
+  return res.redirect("/sign-in");
 }
+
+export default useApiRequestHandler({
+  GET: handler,
+});

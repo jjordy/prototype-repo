@@ -9,7 +9,6 @@ import { ComponentDictionary, controls } from "@/components/Forms";
 export default function CreateTicket() {
   const { push } = useRouter();
   const { data } = useSWR("/tickets/json-schema", api.get);
-  console.log(data);
   return (
     <Layout>
       <Modal

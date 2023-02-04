@@ -4,7 +4,13 @@ import styles from "./index.module.css";
 import { PlusIcon, SaveAsIcon, XIcon } from "@heroicons/react/solid";
 import { Button } from "@jjordy/ui";
 
-const Label = ({ id, children }) => {
+const Label = ({
+  id,
+  children,
+}: {
+  id?: string;
+  children?: React.ReactNode;
+}) => {
   return (
     <label htmlFor={id} className={styles.label}>
       {children}
@@ -12,7 +18,13 @@ const Label = ({ id, children }) => {
   );
 };
 
-const FieldGroup = ({ children, inline = false }) => (
+const FieldGroup = ({
+  children,
+  inline = false,
+}: {
+  children: React.ReactNode;
+  inline?: boolean;
+}) => (
   <div className={`${styles.fieldGroup} ${inline ? styles.inline : ""}`}>
     {children}
   </div>
@@ -98,7 +110,7 @@ export const ComponentDictionary = {
           className={`${styles.inputBase} ${error ? styles.error : ""}`}
         >
           <option>Select a value</option>
-          {options?.map((option, idx) => (
+          {options?.map((option: any, idx: any) => (
             <option value={option?.value} key={`${name}_opt_${idx}`}>
               {option?.label}
             </option>
@@ -108,7 +120,7 @@ export const ComponentDictionary = {
       </FieldGroup>
     );
   },
-  boolean: ({ title, name, register, id, error }) => {
+  boolean: ({ title, name, register, id, error }: any) => {
     return (
       <FieldGroup inline>
         <input

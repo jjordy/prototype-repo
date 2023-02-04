@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import client from "@jjordy/data";
 import { validPassword } from "@/lib/auth";
 import jwt from "jsonwebtoken";
-import { useRestrictToMethod } from "@/lib/api";
+import { useApiRequestHandler } from "@/lib/api";
 
 type Data = {
   path: string;
@@ -46,4 +46,10 @@ async function handler(
   }
 }
 
-export default useRestrictToMethod("POST", handler);
+export default useApiRequestHandler(
+  {
+    POST: handler,
+  },
+  // dont authenticate this route
+  false
+);
