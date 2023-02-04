@@ -11,17 +11,17 @@ import { isAuthenticated } from "@/lib/auth";
 import useSWR from "swr";
 import { FormSchema } from "@jjordy/form-schema";
 import { ComponentDictionary, controls } from "@/components/Forms";
-
+import { ListPlaceholder } from "@jjordy/ui";
 type ProfileProps = {
   profile: any;
 };
 
 export default function MyProfile({ profile }: ProfileProps) {
   useAuth({ onFail: () => push("/sign-in") });
-  const { data } = useSWR("/user/schema", api.get);
+  const { data: schema } = useSWR("/user/schema", api.get);
   const { push } = useRouter();
   const { mutate } = useSWRConfig();
-  const { handleSubmit, register } = useForm({ defaultValues: profile });
+  console.log(schema);
   const updateProfile = useCallback((values: any) => {
     api
       .put("/user", values)
@@ -36,10 +36,11 @@ export default function MyProfile({ profile }: ProfileProps) {
         <h1 className="text-xl font-semibold tracking-wide">My Profile</h1>
       </div>
       <hr className="my-8 block" />
-      {data && (
+
+      {schema ? (
         <FormSchema
           name="create_ticket_form"
-          schema={data}
+          schema={schema}
           defaultValues={profile}
           uiSchema={{
             controls,
@@ -47,6 +48,8 @@ export default function MyProfile({ profile }: ProfileProps) {
           components={ComponentDictionary}
           onSubmit={updateProfile}
         />
+      ) : (
+        <ListPlaceholder />
       )}
     </Layout>
   );

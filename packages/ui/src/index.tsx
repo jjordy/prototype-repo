@@ -7,4 +7,5 @@ import "./styles.css";
 export * from "./Button";
 export * from "./Card";
 export * from "./Input";
+export * from "./ListPlaceholder";
 export * from "./Modal";

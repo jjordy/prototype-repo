@@ -21,9 +21,9 @@
   "license": "MIT",
   "dependencies": {
     "@jjordy/eslint-config-custom": "*",
-    "eslint": "^7.32.0",
+    "eslint": "^8.33.0",
     "prettier": "2.8.3",
-    "prettier-plugin-tailwindcss": "^0.1.11",
-    "turbo": "^1.7.0"
+    "prettier-plugin-tailwindcss": "^0.2.2",
+    "turbo": "^1.7.3"
   }
 }

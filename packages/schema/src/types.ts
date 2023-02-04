@@ -1,7 +1,6 @@
 import React from "react";
-import { JSONSchema } from "@apidevtools/json-schema-ref-parser";
 import { UseFormReturn } from "react-hook-form";
-
+import { JSONSchema } from "@apidevtools/json-schema-ref-parser/dist/lib/types";
 export type KnownKeys<T> = {
   [K in keyof T]: string extends K ? never : number extends K ? never : K;
 } extends { [_ in keyof T]: infer U }

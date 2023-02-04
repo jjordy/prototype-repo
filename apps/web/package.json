@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroicons/react": "^1.0.6",
+    "@heroicons/react": "1.0.6",
     "@jjordy/data": "*",
     "@jjordy/form-schema": "*",
     "@jjordy/ui": "*",
@@ -27,12 +27,12 @@
     "@jjordy/tailwind-config": "*",
     "@jjordy/tsconfig": "*",
     "@types/jsonwebtoken": "^9.0.1",
-    "@types/node": "^18.11.17",
-    "@types/react": "^18.0.26",
-    "@types/react-dom": "^18.0.9",
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
     "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.20",
+    "postcss": "^8.4.21",
     "tailwindcss": "^3.2.4",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   }
 }
