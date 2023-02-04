@@ -30,15 +30,6 @@ export default function SignUpPage() {
         <Card className="max-w-xl">
           <h1 className="text-4xl tracking-wide">Sign in</h1>
           <hr className="my-4" />
-          <p className="mb-4">
-            <strong>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quidem
-              temporibus iusto repellat quas. Delectus autem beatae
-              necessitatibus incidunt totam impedit omnis, exercitationem aut
-              voluptatum, fugiat asperiores consequuntur sit debitis
-              perspiciatis?
-            </strong>
-          </p>
           <form onSubmit={handleSubmit(signin)}>
             <Input
               type="email"

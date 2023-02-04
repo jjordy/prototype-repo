@@ -25,12 +25,10 @@ export default function SignUpPage() {
   }, []);
   return (
     <Layout>
-      <div className="flex items-center justify-center">
-        <Card className="max-w-2xl">
-          <div className="flex items-center justify-center">
-            <h1 className="text-xl font-semibold tracking-wide">Sign up</h1>
-          </div>
-          <hr className="my-8 block" />
+      <div className="flex min-h-[750px] items-center justify-center">
+        <Card className="max-w-xl">
+          <h1 className="text-4xl tracking-wide">Sign up</h1>
+          <hr className="my-4" />
           <form onSubmit={handleSubmit(signin)}>
             <Input
               type="text"
