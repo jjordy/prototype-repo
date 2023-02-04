@@ -9,11 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^1.0.6",
     "@jjordy/data": "*",
+    "@jjordy/form-schema": "*",
     "@jjordy/ui": "*",
+    "@next/font": "^13.1.6",
     "classnames": "2.3.2",
     "jsonwebtoken": "^9.0.0",
-    "next": "latest",
+    "next": "13.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "7.43.0",

@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import { parseCookies } from "@/lib";
+import { parseCookies } from "@/lib/auth";
 import { NextPageContext } from "next";
 import client from "@jjordy/data";
 

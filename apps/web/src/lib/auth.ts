@@ -1,5 +1,7 @@
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
+import { IncomingHttpHeaders } from "node:http";
+import { NextPageContext } from "next";
 
 /**
  * Authentication Helpers
@@ -27,3 +29,30 @@ export function decodeToken(token: string) {
     return decoded as unknown as Token;
   }
 }
+
+export function parseCookies<T = Record<string, string>>(
+  headers: IncomingHttpHeaders
+) {
+  const items = headers?.cookie?.split(";");
+  if (items) {
+    const pairs = items.reduce<Record<string, string>>((acc, curr) => {
+      const [one, two] = curr.split("=");
+      acc[one] = two;
+      return acc;
+    }, {});
+    return pairs;
+  }
+  return {};
+}
+
+export const isAuthenticated = (ctx: NextPageContext) => {
+  const { headers = {} } = ctx?.req || {};
+  const cookies = parseCookies(headers);
+  if (process.env.JWT_SECRET) {
+    const decoded = jwt.verify(cookies?.token, process.env.JWT_SECRET);
+    if (decoded && typeof decoded === "object") {
+      return decoded;
+    }
+  }
+  return false;
+};

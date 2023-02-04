@@ -1,0 +1,19 @@
+{
+  "extends": "@jjordy/tsconfig/react-library.json",
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules",
+    "src/**/*.test.tsx"
+  ],
+  "compilerOptions": {
+    "outDir": "dist",
+    "lib": [
+      "DOM",
+      "ES2015"
+    ]
+  }
+}

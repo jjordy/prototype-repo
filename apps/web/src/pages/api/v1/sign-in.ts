@@ -40,7 +40,7 @@ async function handler(
       "set-cookie",
       `token=${token}; path=/; httponly; samesite=Strict;`
     );
-    res.status(200).json({ path: "/" });
+    res.status(200).json({ path: "/profile" });
   } else {
     res.status(404).json({ error: "User Not Found" });
   }

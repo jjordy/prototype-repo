@@ -8,12 +8,8 @@ export const Card = ({
   className?: string;
 }) => {
   return (
-    <div
-      className={` ui-bg-white/10 ui-text-white ui-rounded-2xl ui-shadow-2xl ${
-        className ?? ""
-      }`}
-    >
-      <div className="ui-p-4">{children}</div>
+    <div className={` rounded-2xl bg-white shadow-2xl ${className ?? ""}`}>
+      <div className="p-4">{children}</div>
     </div>
   );
 };

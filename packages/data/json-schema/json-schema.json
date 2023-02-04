@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "salt": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phone_number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "address_1": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "address_2": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "zip_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "owned_tickets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Ticket"
+          }
+        },
+        "assigned_tickets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Ticket"
+          }
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Comment"
+          }
+        }
+      }
+    },
+    "Ticket": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "default": "TODO",
+          "enum": [
+            "TODO",
+            "IN_PROGRESS",
+            "BLOCKED",
+            "DONE"
+          ]
+        },
+        "assignee": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "author": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Comment"
+          }
+        }
+      }
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "content": {
+          "type": "string"
+        },
+        "author": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ticket": {
+          "$ref": "#/definitions/Ticket"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "ticket": {
+      "$ref": "#/definitions/Ticket"
+    },
+    "comment": {
+      "$ref": "#/definitions/Comment"
+    }
+  }
+}

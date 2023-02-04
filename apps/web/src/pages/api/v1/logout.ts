@@ -13,7 +13,7 @@ export default async function handler(
     jwt.verify(cookies["token"], JWT_SECRET)
   ) {
     res.setHeader("set-cookie", "token=; max-age=-1; samesite=strict; path=/;");
-    return res.redirect("/");
+    return res.redirect("/sign-in");
   }
   return res.status(401).end();
 }

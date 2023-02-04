@@ -1,5 +1,3 @@
-import { IncomingHttpHeaders } from "http";
-
 type REQUEST_TYPES = "get" | "post" | "put" | "patch" | "delete";
 
 const requests = ["get", "post", "put", "patch", "delete"];
@@ -61,22 +59,9 @@ const fetchData = async (
     if (response) {
       throw err;
     } else {
-      throw new Error("Something went wrong contacting the API...");
+      throw new Error(
+        "Fetch::ConnectionError: Something went wrong contacting the API..."
+      );
     }
   }
 };
-
-export function parseCookies<T = Record<string, string>>(
-  headers: IncomingHttpHeaders
-) {
-  const items = headers?.cookie?.split(";");
-  if (items) {
-    const pairs = items.reduce<Record<string, string>>((acc, curr) => {
-      const [one, two] = curr.split("=");
-      acc[one] = two;
-      return acc;
-    }, {});
-    return pairs;
-  }
-  return {};
-}

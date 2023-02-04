@@ -1,16 +1,27 @@
 import * as React from "react";
 import cn from "classnames";
 
-type ButtonProps = React.ComponentProps<"button">;
+type ButtonProps = React.ComponentProps<"button"> & {
+  size?: "small" | "medium" | "large";
+  variant?: "primary" | "error" | "transparent";
+};
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, className, ...rest }, ref) => {
+  (
+    { children, className, size = "medium", variant = "primary", ...rest },
+    ref
+  ) => {
     return (
       <button
         {...rest}
         className={cn(
-          "ui-rounded-lg ui-bg-indigo-500 hover:ui-bg-indigo-600 ui-transition ui-duration-75 ui-ease-in-out ui-px-4 ui-py-3 ui-shadow-xl",
-          className
+          "rounded-lg transition duration-75 ease-in-out",
+          className,
+          size === "small" && " px-3 py-2",
+          size === "medium" && " px-4 py-3",
+          variant === "primary" &&
+            "bg-indigo-500 text-white shadow-xl hover:bg-indigo-600",
+          variant === "transparent" && ""
         )}
       >
         {children}

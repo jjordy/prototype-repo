@@ -3,18 +3,28 @@ import cn from "classnames";
 
 type InputProps = {
   label: string | React.ReactNode;
+  inline?: boolean;
 } & React.ComponentProps<"input">;
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ children, className, label, name, ...rest }, ref) => {
+  ({ children, className, label, name, inline = false, ...rest }, ref) => {
     return (
-      <div className="ui-flex ui-flex-col ui-mb-2 ui-w-full">
+      <div
+        className={cn(
+          "flex w-full items-center",
+          !inline && "mb-2 flex-col",
+          inline && "my-8"
+        )}
+      >
         {label && (
           <>
             {typeof label === "string" ? (
               <label
                 htmlFor={`id_${name}`}
-                className="ui-font-semibold ui-text-white/70 ui-tracking-wide ui-mb-1"
+                className={cn(
+                  "mb-1 self-start font-semibold tracking-wide",
+                  inline && "w-full max-w-sm"
+                )}
               >
                 {label}
               </label>
@@ -29,8 +39,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={`id_${name}`}
           name={name}
           className={cn(
-            "ui-h-10 focus:ui-outline-none focus:ui-ring focus:ui-ring-3 focus:ui-ring-indigo-900/70 ui-px-2 ui-shadow ui-rounded-lg ui-bg-blue-900/40 ",
-            className
+            " focus:ring-3 shadow-200 h-10 w-full rounded-lg border border-slate-200 px-2 focus:outline-none focus:ring focus:ring-indigo-900/70 disabled:bg-slate-500/40 ",
+            className,
+            inline && "h-16"
           )}
         />
       </div>

@@ -1,11 +1,19 @@
 .nav {
-  @apply flex items-center h-16 fixed w-full font-semibold text-white;
+  @apply fixed flex h-16 w-full items-center bg-white px-24 font-semibold shadow-xl;
 }
 
-.content {
-  @apply h-screen container mx-auto pt-20;
+.main {
+  @apply container mx-auto h-screen pt-20;
 }
 
 .wrapper {
-  @apply bg-gradient-to-tr from-pink-400 to-sky-600;
+  @apply bg-gradient-to-tr from-slate-50 to-slate-200;
+}
+
+.sidebar {
+  @apply h-full w-1/6;
+}
+
+.content {
+  @apply w-5/6;
 }
