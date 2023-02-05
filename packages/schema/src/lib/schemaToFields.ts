@@ -29,6 +29,7 @@ export function schemaToFields(s: JSONFormSchema) {
       const composition = buildCompositionItem(
         schemaObj,
         parentSchemaObj || {},
+        fieldName,
         rootPath
       );
       if (composition) {
@@ -94,31 +95,23 @@ const buildArrayItem = (
 const buildCompositionItem = (
   schemaObj: JSONFormSchema,
   parentSchemaObj: JSONFormSchema,
+  fieldName: string,
   rootPath?: any[]
 ) => {
   if (schemaObj?.anyOf) {
+    // console.log(schemaObj, parentSchemaObj, rootPath, fieldName);
     if (Array.isArray(schemaObj?.anyOf)) {
-      const anyOf: any = schemaObj?.anyOf;
-      const name = nanoid();
-      const anyOfOptions = anyOf.map(
-        (obj: JSONFormSchema, idx: number) => obj?.title || idx + 1
-      );
-
-      schemaObj?.anyOf?.forEach((_item, id: number) => {
-        if (schemaObj.anyOf && typeof _item === "object") {
-          schemaObj.anyOf[id] = buildDepedencyTree(
-            _item,
-            name,
-            _item.title || id
-          );
-        }
-      });
-      const anyOfSelect = buildItemProperties(
-        name,
-        { ...schemaObj, enum: anyOfOptions },
-        rootPath || []
-      );
-      return anyOfSelect;
+      if (schemaObj.anyOf.length === 2) {
+        const [ref, allowNull] = schemaObj.anyOf;
+        const item = buildItemProperties(
+          fieldName,
+          //@ts-expect-error $ref is valid on this type is wrong.
+          { ...schemaObj, component: ref.$ref, type: "string" },
+          rootPath || []
+        );
+        console.log(item);
+        return item;
+      }
     }
   }
   if (schemaObj?.oneOf) {
@@ -128,40 +121,6 @@ const buildCompositionItem = (
     // TODO: Add not logic
   }
   return null;
-};
-
-/**
- * buildDependencyTree
- * this helper method will walk the properties of a schema
- * adding a custom dependentOn object used
- * by the form to conditionally hide and show fields
- */
-const buildDepedencyTree = (
-  schemaObj: JSONFormSchema,
-  name: string,
-  value: string | number
-) => {
-  const newObj = { ...schemaObj };
-  switch (schemaObj?.type) {
-    case "object":
-      if (schemaObj?.properties) {
-        newObj.properties = Object.keys(schemaObj?.properties).reduce(
-          (acc: any, curr: any) => {
-            if (typeof schemaObj.properties?.[curr] === "object") {
-              acc[curr] = {
-                // @ts-expect-error
-                ...schemaObj.properties?.[curr],
-                dependentOn: { name, value },
-              };
-            }
-
-            return acc;
-          },
-          {}
-        );
-      }
-  }
-  return newObj;
 };
 /**
  *
@@ -233,7 +192,6 @@ const buildItemProperties = (
     format,
     title = fieldName,
     description,
-    dependentOn,
     default: defaultValue,
     ...rest
   }: JSONFormSchema,
@@ -245,14 +203,9 @@ const buildItemProperties = (
   };
   field.id = `id_${fieldName}`;
   field.name = fieldName;
-  field.component = type;
+  field.component = component || type;
   field.type = type as any;
-  field.dependentOn = dependentOn;
   field.defaultValue = defaultValue;
-
-  if (field.dependentOn) {
-    field.visible = false;
-  }
   // we dont pull this out in the spread because
   // enum is a reserved word i guess
   if (rest.enum) {
@@ -265,7 +218,7 @@ const buildItemProperties = (
   if (format) {
     switch (format) {
       case "date":
-        field.component = component || "date";
+        field.component = component || "datetime";
         break;
       case "email":
         field.component = component || "email";

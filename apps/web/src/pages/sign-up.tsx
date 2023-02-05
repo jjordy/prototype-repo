@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import { api } from "@/lib";
 import { useRouter } from "next/router";
 import { useSWRConfig } from "swr";
+import { Modal } from "@jjordy/ui";
 
 export default function SignUpPage() {
   const { mutate } = useSWRConfig();
@@ -25,47 +26,47 @@ export default function SignUpPage() {
   }, []);
   return (
     <Layout>
-      <div className="flex min-h-[750px] items-center justify-center">
-        <Card className="max-w-xl">
-          <h1 className="text-4xl tracking-wide">Sign up</h1>
-          <hr className="my-4" />
-          <form onSubmit={handleSubmit(signin)}>
+      <Modal
+        open
+        onClose={() => push("/")}
+        title={<h1 className="text-2xl">Sign Up</h1>}
+      >
+        <form onSubmit={handleSubmit(signin)}>
+          <Input
+            type="text"
+            {...register("name")}
+            label="Name"
+            placeholder="John Doe"
+          />
+          <Input
+            type="email"
+            {...register("email")}
+            label="Email Address"
+            placeholder="johndoe@email.com"
+          />
+          <div className="flex w-full items-center space-x-4">
             <Input
-              type="text"
-              {...register("name")}
-              label="Name"
-              placeholder="John Doe"
+              type="password"
+              {...register("password")}
+              placeholder="********"
+              label="Password"
             />
             <Input
-              type="email"
-              {...register("email")}
-              label="Email Address"
-              placeholder="johndoe@email.com"
+              type="password"
+              {...register("confirm_password")}
+              placeholder="********"
+              label="Confirm Password"
             />
-            <div className="flex w-full items-center space-x-4">
-              <Input
-                type="password"
-                {...register("password")}
-                placeholder="********"
-                label="Password"
-              />
-              <Input
-                type="password"
-                {...register("confirm_password")}
-                placeholder="********"
-                label="Confirm Password"
-              />
-            </div>
-            <Input
-              type="tel"
-              {...register("phone_number")}
-              placeholder="+1*******"
-              label="Phone Number (Optional)"
-            />
-            <Button className="my-8 w-full">Sign Up</Button>
-          </form>
-        </Card>
-      </div>
+          </div>
+          <Input
+            type="tel"
+            {...register("phone_number")}
+            placeholder="+1*******"
+            label="Phone Number (Optional)"
+          />
+          <Button className="my-8 w-full">Sign Up</Button>
+        </form>
+      </Modal>
     </Layout>
   );
 }

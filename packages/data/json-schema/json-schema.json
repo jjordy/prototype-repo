@@ -17,16 +17,10 @@
           "type": "string"
         },
         "name": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         },
         "phone_number": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         },
         "address_1": {
           "type": [
@@ -93,13 +87,15 @@
           "format": "date-time"
         },
         "title": {
-          "type": "string"
+          "type": "string",
+          "description": "Give your ticket a descriptive title that will be easy to remember"
         },
         "content": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "Give your ticket some information"
         },
         "status": {
           "type": "string",
@@ -122,14 +118,7 @@
           ]
         },
         "author": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/User"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "$ref": "#/definitions/User"
         },
         "comments": {
           "type": "array",

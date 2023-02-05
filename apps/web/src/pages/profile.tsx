@@ -12,16 +12,16 @@ import useSWR from "swr";
 import { FormSchema } from "@jjordy/form-schema";
 import { ComponentDictionary, controls } from "@/components/Forms";
 import { ListPlaceholder } from "@jjordy/ui";
+import getSchema, { titleCase } from "@/lib/getSchema";
 type ProfileProps = {
   profile: any;
+  schema: any;
 };
 
-export default function MyProfile({ profile }: ProfileProps) {
+export default function MyProfile({ profile, schema }: ProfileProps) {
   useAuth({ onFail: () => push("/sign-in") });
-  const { data: schema } = useSWR("/user/schema", api.get);
   const { push } = useRouter();
   const { mutate } = useSWRConfig();
-  console.log(schema);
   const updateProfile = useCallback((values: any) => {
     api
       .put("/user", values)
@@ -30,6 +30,7 @@ export default function MyProfile({ profile }: ProfileProps) {
         console.log(err);
       });
   }, []);
+  console.log(schema);
   return (
     <Layout>
       <div className="flex items-center justify-center">
@@ -57,11 +58,27 @@ export default function MyProfile({ profile }: ProfileProps) {
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const authenticated = isAuthenticated(ctx);
+  const schema = getSchema("User", {
+    omit: [
+      "hash",
+      "salt",
+      "created_at",
+      "updated_at",
+      "assigned_tickets",
+      "owned_tickets",
+      "id",
+    ],
+    mutate: (key: string, values: any) => ({
+      title: titleCase(key),
+      ...values,
+    }),
+  });
   if (authenticated && authenticated.sub) {
     const profile = await client.user.findFirst({
       where: { id: authenticated.sub as unknown as number },
       select: {
         email: true,
+        id: true,
         name: true,
         phone_number: true,
         address_1: true,
@@ -74,10 +91,13 @@ export async function getServerSideProps(ctx: NextPageContext) {
     return {
       props: {
         profile,
+        schema,
       },
     };
   }
   return {
-    props: {},
+    props: {
+      schema,
+    },
   };
 }

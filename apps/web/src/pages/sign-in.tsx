@@ -1,11 +1,12 @@
 import { useCallback } from "react";
-import { Card, Button, Input } from "@jjordy/ui";
+import { Card, Button, Input, Modal } from "@jjordy/ui";
 import { useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
 import { api } from "@/lib";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSWRConfig } from "swr";
+import { FormSchema } from "@/components/Forms";
 
 export default function SignUpPage() {
   const { mutate } = useSWRConfig();
@@ -26,35 +27,42 @@ export default function SignUpPage() {
   }, []);
   return (
     <Layout>
-      <div className="flex min-h-[750px] items-center justify-center">
-        <Card className="max-w-xl">
-          <h1 className="text-4xl tracking-wide">Sign in</h1>
-          <hr className="my-4" />
-          <form onSubmit={handleSubmit(signin)}>
-            <Input
-              type="email"
-              placeholder="johndoe@email.com"
-              label="Email"
-              {...register("email")}
-            />
-            <Input
-              label="Password"
-              placeholder="**********"
-              type="password"
-              {...register("password")}
-            />
-            <Button className="my-8 w-full">Submit</Button>
-            <div className="my-4 flex items-center justify-center">
-              <Link
-                href="/forgot-password"
-                className=" font-semibold text-blue-900/60"
-              >
-                Forgot Password
-              </Link>
-            </div>
-          </form>
-        </Card>
-      </div>
+      <Modal
+        open
+        onClose={() => push("/")}
+        title={<h1 className="text-2xl">Sign In</h1>}
+      >
+        <FormSchema
+          name="login_form"
+          defaultValues={{ email: "", password: "" }}
+          onSubmit={signin}
+          debug
+          schema={{
+            $schema: "http://json-schema.org/draft-07/schema#",
+            properties: {
+              email: {
+                type: "string",
+                component: "email",
+                title: "Email",
+                description:
+                  "Enter your email address you used when you created your account",
+                isNotEmpty: true,
+                errorMessage: "Please enter your email",
+              },
+              password: {
+                type: "string",
+                component: "password",
+                description:
+                  "Enter the password you used when you created your account",
+                isNotEmpty: true,
+                errorMessage: "Please enter your password",
+              },
+            },
+            type: "object",
+            // required: ["email", "password"],
+          }}
+        />
+      </Modal>
     </Layout>
   );
 }

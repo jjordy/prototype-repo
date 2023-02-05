@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import { useApiRequestHandler } from "@/lib/api";
-
+import { Prisma } from "@jjordy/data";
 /**
  * the useApiRequestHandler will authenticate
  * the user / token by default so if our auth handler is hit

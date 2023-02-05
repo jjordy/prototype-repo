@@ -5,10 +5,20 @@ import { useRouter } from "next/router";
 import { FormSchema } from "@jjordy/form-schema";
 import useSWR from "swr";
 import { ComponentDictionary, controls } from "@/components/Forms";
+import { NextPageContext } from "next";
+import getSchema, { titleCase } from "@/lib/getSchema";
+import { useCallback } from "react";
 
-export default function CreateTicket() {
+type Ticket = any;
+
+export default function CreateTicket({ schema }: any) {
   const { push } = useRouter();
-  const { data } = useSWR("/tickets/json-schema", api.get);
+  const createTicket = useCallback((data: Ticket) => {
+    api
+      .post("/tickets", data)
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <Layout>
       <Modal
@@ -17,20 +27,45 @@ export default function CreateTicket() {
         title={<h1 className="text-2xl">Create a new ticket</h1>}
       >
         <hr />
-        {data && (
-          <FormSchema
-            name="create_ticket_form"
-            schema={data}
-            defaultValues={{}}
-            uiSchema={{
-              // rowMap: [["name", "status"]],
-              controls,
-            }}
-            components={ComponentDictionary}
-            onSubmit={(v) => console.log(v)}
-          />
-        )}
+        <FormSchema
+          debug
+          name="create_ticket_form"
+          schema={schema}
+          defaultValues={{}}
+          uiSchema={{
+            controls,
+          }}
+          components={ComponentDictionary}
+          onSubmit={createTicket}
+        />
       </Modal>
     </Layout>
   );
+}
+
+export async function getServerSideProps(ctx: NextPageContext) {
+  const schema = getSchema("Ticket", {
+    // Omit properties from the base schema we dont need.
+    omit: ["comments", "author", "id", "updated_at", "created_at"],
+    // mutate the properties to add a title :)
+    // this is a keyword our form handler looks for on the json schema.
+    mutate: (key: string, values: any) => {
+      if (key === "content") {
+        return {
+          title: titleCase(key),
+          component: "rte",
+          ...values,
+        };
+      }
+      return {
+        title: titleCase(key),
+        ...values,
+      };
+    },
+  });
+  return {
+    props: {
+      schema,
+    },
+  };
 }

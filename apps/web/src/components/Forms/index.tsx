@@ -1,8 +1,14 @@
 import React from "react";
-import { FieldComponentProps, UIControls } from "@jjordy/form-schema";
+import {
+  FieldComponentProps,
+  UIControls,
+  FormSchema as BaseFormSchema,
+} from "@jjordy/form-schema";
 import styles from "./index.module.css";
 import { PlusIcon, SaveAsIcon, XIcon } from "@heroicons/react/solid";
-import { Button } from "@jjordy/ui";
+import { Button, Combobox } from "@jjordy/ui";
+import { api } from "@/lib";
+import useSWR from "swr";
 
 const Label = ({
   id,
@@ -31,7 +37,14 @@ const FieldGroup = ({
 );
 
 export const ComponentDictionary = {
-  string: ({ register, name, id, title, error }: FieldComponentProps) => (
+  string: ({
+    register,
+    name,
+    id,
+    title,
+    error,
+    description,
+  }: FieldComponentProps) => (
     <FieldGroup>
       <Label id={id}>{title}</Label>
       <input
@@ -40,7 +53,28 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
-      <p>{error && error.message}</p>
+      <p className={styles.description}>{description && description}</p>
+      <p className={styles.errorMessage}>{error && error.message}</p>
+    </FieldGroup>
+  ),
+  email: ({
+    register,
+    name,
+    id,
+    title,
+    error,
+    description,
+  }: FieldComponentProps) => (
+    <FieldGroup>
+      <Label id={id}>{title}</Label>
+      <input
+        type="email"
+        {...register(name)}
+        id={id}
+        className={`${styles.inputBase} ${error ? styles.error : ""}`}
+      />
+      <p className={styles.description}>{description && description}</p>
+      <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
   password: ({ register, name, id, title, error }: FieldComponentProps) => (
@@ -52,7 +86,7 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
-      <p>{error && error.message}</p>
+      <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
   integer: ({ register, name, id, title, error }: FieldComponentProps) => (
@@ -64,7 +98,7 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
-      <p>{error && error.message}</p>
+      <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
   number: ({ register, name, id, title, error }: FieldComponentProps) => (
@@ -76,10 +110,10 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
-      <p>{error && error.message}</p>
+      <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
-  date: ({ register, name, id, title, error }: FieldComponentProps) => (
+  datetime: ({ register, name, id, title, error }: FieldComponentProps) => (
     <FieldGroup>
       <Label id={id}>{title}</Label>
       <input
@@ -88,7 +122,7 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
-      <p>{error && error.message}</p>
+      <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
   select: ({
@@ -116,11 +150,11 @@ export const ComponentDictionary = {
             </option>
           ))}
         </select>
-        <p>{error && error.message}</p>
+        <p className={styles.errorMessage}>{error && error.message}</p>
       </FieldGroup>
     );
   },
-  boolean: ({ title, name, register, id, error }: any) => {
+  boolean: ({ title, name, register, id, error }: FieldComponentProps) => {
     return (
       <FieldGroup inline>
         <input
@@ -132,6 +166,56 @@ export const ComponentDictionary = {
         <Label id={id}>{title}</Label>
         {error && <p className="!ml-2">({error.message})</p>}
       </FieldGroup>
+    );
+  },
+  rte: ({
+    title,
+    name,
+    register,
+    id,
+    error,
+    setValue,
+    getValues,
+  }: FieldComponentProps) => {
+    const value = getValues(name);
+    return (
+      <>
+        <Label id={id}>{title}</Label>
+        <textarea
+          {...register(name)}
+          id={id}
+          className={styles.inputBase}
+          style={{ height: 150 }}
+        />
+      </>
+    );
+  },
+  "#/definitions/User": ({
+    title,
+    name,
+    register,
+    id,
+    error,
+    setValue,
+    getValues,
+  }: FieldComponentProps) => {
+    const value = getValues(name);
+    const { data } = useSWR("/users", api.get);
+    const handleSetUser = (value: { id: number }) => {
+      const user = data?.find((u: any) => u.id === value.id);
+      setValue(name, user);
+    };
+    return (
+      <>
+        <Label id={id}>{title}</Label>
+        {data && (
+          <Combobox
+            value={value || { id: null, name: "Select a value" }}
+            options={data}
+            onChange={handleSetUser}
+          />
+        )}
+      </>
     );
   },
 };
@@ -175,3 +259,11 @@ export const controls: UIControls = {
     </div>
   ),
 };
+
+export const FormSchema = (props: any) => (
+  <BaseFormSchema
+    uiSchema={{ controls, ...(props.uiSchema || {}) }}
+    components={{ ...(props.components || {}), ...ComponentDictionary }}
+    {...props}
+  />
+);

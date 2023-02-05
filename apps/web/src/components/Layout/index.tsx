@@ -57,38 +57,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
       </nav>
-      {!authenticated && <main className={s.main}>{children}</main>}
-      {authenticated && (
-        <main className={s.main}>
-          <div className="flex space-x-4">
-            <div className={s.sidebar}>
-              <Card>
-                <div className="flex flex-col text-slate-800">
-                  <Link
-                    href="/"
-                    className={cn("border-b border-slate-200 p-2", {
-                      "font-bold": pathname === "/",
-                    })}
-                  >
-                    Home
-                  </Link>
-                  <Link
-                    href={`/tickets?assignee=${user?.id}`}
-                    className={cn("p-2", {
-                      "font-bold": pathname.includes("/tickets"),
-                    })}
-                  >
-                    My Tickets
-                  </Link>
-                </div>
-              </Card>
-            </div>
-            <div className={s.content}>
-              <Card>{children}</Card>
-            </div>
-          </div>
-        </main>
-      )}
+      <main className={s.main}>{children}</main>
     </div>
   );
 }
