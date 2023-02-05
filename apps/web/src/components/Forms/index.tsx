@@ -177,7 +177,19 @@ export const ComponentDictionary = {
     setValue,
     getValues,
   }: FieldComponentProps) => {
-    const value = getValues(name);
+    return (
+      <>
+        <Label id={id}>{title}</Label>
+        <textarea
+          {...register(name)}
+          id={id}
+          className={styles.inputBase}
+          style={{ height: 150 }}
+        />
+      </>
+    );
+  },
+  textarea: ({ title, name, register, id, error }: FieldComponentProps) => {
     return (
       <>
         <Label id={id}>{title}</Label>
@@ -203,7 +215,7 @@ export const ComponentDictionary = {
     const { data } = useSWR("/users", api.get);
     const handleSetUser = (value: { id: number }) => {
       const user = data?.find((u: any) => u.id === value.id);
-      setValue(name, user);
+      setValue(name, user, { shouldValidate: true });
     };
     return (
       <>

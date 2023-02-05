@@ -4,6 +4,7 @@ import * as React from "react";
 import "./styles.css";
 
 // components
+export * from "./Badge";
 export * from "./Button";
 export * from "./Card";
 export * from "./Combobox";

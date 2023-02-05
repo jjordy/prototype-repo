@@ -11,7 +11,11 @@ export const titleCase = (s: string) =>
   s
     .replace(/^[-_]*(.)/, (_, c) => c.toUpperCase()) // Initial char (after -/_)
     .replace(/[-_]+(.)/g, (_, c) => " " + c.toUpperCase());
-
+/**
+ * The purpose of this function is to take our base json schema
+ * provided by prisma and add the necessary additions that
+ * react-hook-form-schema requires
+ */
 export default function getSchema(model: string, options?: Options) {
   let $schema = {
     $schema: schema.$schema,
@@ -20,9 +24,25 @@ export default function getSchema(model: string, options?: Options) {
   };
   if (schema.definitions?.[model]?.properties) {
     if (options && options.omit) {
+      // create a mutable variable that we can work with for our form properties.
       const mutable = { ...schema.definitions?.[model]?.properties };
       Object.keys(mutable).forEach((key) => {
+        const title = titleCase(key);
+        // by default our schema wont have a title
+        if (!mutable[key].title) {
+          mutable[key].title = title;
+        }
+        if (!mutable[key].errorMessage) {
+          mutable[key].errorMessage = `${title} required`;
+        }
+        // the prisma generator will send optional fields
+        // in the following json schema format
+        // type: [{ type: "string"}, { type: "null"}]
+        if (!Array.isArray(mutable[key].type)) {
+          mutable[key].isNotEmpty = true;
+        }
         if (options.omit?.includes(key)) {
+          // delete the omissions from the returned schema
           delete mutable[key];
         } else if (options.mutate) {
           mutable[key] = options.mutate(key, mutable[key]);

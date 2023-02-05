@@ -97,6 +97,16 @@
           ],
           "description": "Give your ticket some information"
         },
+        "priority": {
+          "type": "string",
+          "default": "MEDIUM",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "BLOCKER"
+          ]
+        },
         "status": {
           "type": "string",
           "default": "TODO",

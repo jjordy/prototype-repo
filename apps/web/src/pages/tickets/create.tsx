@@ -47,22 +47,8 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const schema = getSchema("Ticket", {
     // Omit properties from the base schema we dont need.
     omit: ["comments", "author", "id", "updated_at", "created_at"],
-    // mutate the properties to add a title :)
-    // this is a keyword our form handler looks for on the json schema.
-    mutate: (key: string, values: any) => {
-      if (key === "content") {
-        return {
-          title: titleCase(key),
-          component: "rte",
-          ...values,
-        };
-      }
-      return {
-        title: titleCase(key),
-        ...values,
-      };
-    },
   });
+  console.log(schema);
   return {
     props: {
       schema,

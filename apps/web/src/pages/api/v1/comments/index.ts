@@ -7,15 +7,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   return res.json(tickets);
 }
 
-async function createTicketHandler(req: NextApiRequest, res: NextApiResponse) {
+async function createCommentHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { sub } = getAuthToken(req);
-    console.log(sub);
-    const {
-      body: { assignee, ...rest },
-    } = req;
-    const data = await client.ticket.create({
-      data: { assignee_id: assignee?.id, author_id: sub, ...rest },
+    const { body } = req;
+    const data = await client.comment.create({
+      data: { ...body },
     });
     return res.json(data);
   } catch (err) {
@@ -25,5 +21,5 @@ async function createTicketHandler(req: NextApiRequest, res: NextApiResponse) {
 
 export default useApiRequestHandler({
   GET: handler,
-  POST: createTicketHandler,
+  POST: createCommentHandler,
 });

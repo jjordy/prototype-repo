@@ -15,7 +15,10 @@ export const RHFSCustomSchemaOptions = {
     {
       keyword: RHFS_ALLOWED_KEYWORDS.IS_NOT_EMPTY,
       validate: (schema: any, data: any) => {
-        return typeof data === "string" && data.trim() !== "";
+        return (
+          (typeof data === "string" && data.trim() !== "") ||
+          typeof data === "object"
+        );
       },
       errors: false,
     },

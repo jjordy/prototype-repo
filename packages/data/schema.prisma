@@ -37,6 +37,7 @@ model Ticket {
   title       String
   /// Give your ticket some information
   content     String?
+  priority    Priority  @default(MEDIUM)
   status      Status    @default(TODO)
   assignee    User?     @relation(name: "AssigneeOfTicket", fields: [assignee_id], references: [id])
   assignee_id Int?
@@ -61,4 +62,11 @@ enum Status {
   IN_PROGRESS
   BLOCKED
   DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  BLOCKER
 }

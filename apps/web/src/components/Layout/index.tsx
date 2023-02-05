@@ -5,6 +5,8 @@ import { Button, Card } from "@jjordy/ui";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import Logo from "./Logo";
+import { Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -57,7 +59,21 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
       </nav>
-      <main className={s.main}>{children}</main>
+      <main className={s.main}>
+        <Transition
+          appear
+          show
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div>{children}</div>
+        </Transition>
+      </main>
     </div>
   );
 }
