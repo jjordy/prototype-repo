@@ -14,6 +14,8 @@ datasource db {
 
 model User {
   id               Int       @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   email            String    @unique
   hash             String
   salt             String
@@ -36,7 +38,7 @@ model Ticket {
   /// Give your ticket a descriptive title that will be easy to remember
   title       String
   /// Give your ticket some information
-  content     String?
+  content     Json?
   priority    Priority  @default(MEDIUM)
   status      Status    @default(TODO)
   assignee    User?     @relation(name: "AssigneeOfTicket", fields: [assignee_id], references: [id])
@@ -50,7 +52,7 @@ model Comment {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  content    String
+  content    Json
   author     User?    @relation(fields: [author_id], references: [id])
   author_id  Int?
   ticket     Ticket   @relation(fields: [ticket_id], references: [id])

@@ -99,7 +99,6 @@ const buildCompositionItem = (
   rootPath?: any[]
 ) => {
   if (schemaObj?.anyOf) {
-    // console.log(schemaObj, parentSchemaObj, rootPath, fieldName);
     if (Array.isArray(schemaObj?.anyOf)) {
       if (schemaObj.anyOf.length === 2) {
         const [ref, allowNull] = schemaObj.anyOf;
@@ -146,8 +145,9 @@ const buildRootItem = (
       case "number":
       case "boolean":
         return buildItemProperties(fieldName, schemaObj, rootPath || []);
-      default:
-        return;
+    }
+    if (schemaObj.type === "object" && schemaObj.component) {
+      return buildItemProperties(fieldName, schemaObj, rootPath || []);
     }
   }
   return;

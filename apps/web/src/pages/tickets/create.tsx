@@ -6,7 +6,7 @@ import { FormSchema } from "@jjordy/form-schema";
 import useSWR from "swr";
 import { ComponentDictionary, controls } from "@/components/Forms";
 import { NextPageContext } from "next";
-import getSchema, { titleCase } from "@/lib/getSchema";
+import getSchema from "@/lib/schema";
 import { useCallback } from "react";
 
 type Ticket = any;
@@ -47,8 +47,13 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const schema = getSchema("Ticket", {
     // Omit properties from the base schema we dont need.
     omit: ["comments", "author", "id", "updated_at", "created_at"],
+    mutate: (key, values) => {
+      if (key === "content") {
+        return { ...values, component: "rte" };
+      }
+      return values;
+    },
   });
-  console.log(schema);
   return {
     props: {
       schema,

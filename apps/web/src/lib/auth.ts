@@ -48,8 +48,8 @@ export function parseCookies<T = Record<string, string>>(
 export const isAuthenticated = (ctx: NextPageContext) => {
   const { headers = {} } = ctx?.req || {};
   const cookies = parseCookies(headers);
-  if (process.env.JWT_SECRET) {
-    const decoded = jwt.verify(cookies?.token, process.env.JWT_SECRET);
+  if (process.env.JWT_SECRET && cookies?.token) {
+    const decoded = jwt.verify(cookies.token, process.env.JWT_SECRET);
     if (decoded && typeof decoded === "object") {
       return decoded;
     }

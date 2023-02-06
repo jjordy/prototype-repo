@@ -5,6 +5,9 @@ export async function getTickets(where: Prisma.TicketWhereInput) {
   return client.ticket.findMany({
     where,
     select: TICKET_SELECT_DATA,
+    orderBy: {
+      status: "desc",
+    },
   });
 }
 
@@ -14,3 +17,5 @@ export async function getTicketById(where: Prisma.TicketWhereInput) {
     select: TICKET_SELECT_DATA,
   });
 }
+
+export type Ticket = Prisma.PromiseReturnType<typeof getTicketById>;

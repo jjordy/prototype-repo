@@ -6,12 +6,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import useAuth from "@/hooks/useAuth";
-import { getTickets } from "@/lib/data/ticket";
-import Priority from "@/components/Priority";
+import { getTickets, Ticket } from "@/lib/data/ticket";
+import { formatDistanceToNowStrict } from "date-fns";
+import { TicketList } from "@/components/TicketList";
 
 type IndexPageProps = {
-  myTickets: Awaited<ReturnType<typeof getTickets>>;
-  otherTickets: Awaited<ReturnType<typeof getTickets>>;
+  myTickets: Ticket[];
+  otherTickets: Ticket[];
 };
 
 export default function IndexPage({
@@ -35,53 +36,27 @@ export default function IndexPage({
               Home
             </Link>
             <Link
-              href={`/tickets?assignee=${user?.id}`}
+              href={`/boards`}
               className={cn("p-2", {
                 "font-bold": pathname.includes("/tickets"),
               })}
             >
-              My Tickets
+              Boards
+            </Link>
+            <Link
+              href={`/tickets`}
+              className={cn("p-2", {
+                "font-bold": pathname.includes("/tickets"),
+              })}
+            >
+              Tickets
             </Link>
           </div>
         </Card>
       </div>
       <div className="w-full">
-        <Card>
-          <h2 className="my-4 text-2xl font-medium">My Tickets</h2>
-          {tickets.map((ticket) => (
-            <div
-              key={`ticket_list_item_${ticket.id}`}
-              className="mb-4 flex items-center rounded-2xl border border-slate-500 p-4"
-            >
-              <div className="font-semibold text-slate-700">
-                <Link href={`/tickets/${ticket.id}`}>{ticket.title}</Link>
-              </div>
-              <div className="mr-auto"></div>
-              <Priority level={ticket.priority} />
-
-              <div className="mx-4 rounded bg-slate-100 p-1 text-xs font-bold text-slate-700 ">
-                {ticket.status}
-              </div>
-              {ticket.created_at}
-            </div>
-          ))}
-          <h3 className="text-md my-4 font-medium">Other Tickets</h3>
-          {otherTickets?.map((ticket) => (
-            <div
-              key={`ticket_list_item_${ticket.id}`}
-              className="mb-4 flex items-center rounded-2xl border border-slate-500 p-4"
-            >
-              <div className="font-semibold text-slate-700">
-                <Link href={`/tickets/${ticket.id}`}>{ticket.title}</Link>
-              </div>
-              <div className="mr-auto"></div>
-              <div className="mx-4 rounded bg-slate-100 p-1 text-xs font-bold text-slate-700">
-                {ticket.status}
-              </div>
-              {ticket.created_at}
-            </div>
-          ))}
-        </Card>
+        <TicketList tickets={tickets} title="My Tickets" />
+        <TicketList tickets={otherTickets} title="Other Tickets" />
       </div>
     </div>
   );

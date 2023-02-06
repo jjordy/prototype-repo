@@ -10,7 +10,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 async function createTicketHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { sub } = getAuthToken(req);
-    console.log(sub);
     const {
       body: { assignee, ...rest },
     } = req;

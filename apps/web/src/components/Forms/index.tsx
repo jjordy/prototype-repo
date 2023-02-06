@@ -9,6 +9,7 @@ import { PlusIcon, SaveAsIcon, XIcon } from "@heroicons/react/solid";
 import { Button, Combobox } from "@jjordy/ui";
 import { api } from "@/lib";
 import useSWR from "swr";
+import { RichTextEditor } from "./RichTextEditor";
 
 const Label = ({
   id,
@@ -177,14 +178,24 @@ export const ComponentDictionary = {
     setValue,
     getValues,
   }: FieldComponentProps) => {
+    const value = getValues(name);
+    const handleChangeValue = (v: any) => {
+      console.log(v);
+      setValue(name, { schema: v });
+    };
     return (
       <>
         <Label id={id}>{title}</Label>
-        <textarea
-          {...register(name)}
-          id={id}
-          className={styles.inputBase}
-          style={{ height: 150 }}
+        <RichTextEditor
+          initialValue={
+            value || [
+              {
+                type: "paragraph",
+                children: [{ text: "" }, { text: "" }, { text: "" }],
+              },
+            ]
+          }
+          onChange={(v) => handleChangeValue(v)}
         />
       </>
     );

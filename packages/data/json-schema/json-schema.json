@@ -7,6 +7,14 @@
         "id": {
           "type": "integer"
         },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
         "email": {
           "type": "string"
         },
@@ -92,7 +100,11 @@
         },
         "content": {
           "type": [
+            "number",
             "string",
+            "boolean",
+            "object",
+            "array",
             "null"
           ],
           "description": "Give your ticket some information"
@@ -153,7 +165,14 @@
           "format": "date-time"
         },
         "content": {
-          "type": "string"
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
         },
         "author": {
           "anyOf": [

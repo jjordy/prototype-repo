@@ -9,8 +9,8 @@ import client from "@jjordy/data";
 import { isAuthenticated } from "@/lib/auth";
 import { FormSchema } from "@jjordy/form-schema";
 import { ComponentDictionary, controls } from "@/components/Forms";
-import { ListPlaceholder } from "@jjordy/ui";
-import getSchema, { titleCase } from "@/lib/getSchema";
+import getSchema from "@/lib/schema";
+import { getUserById } from "@/lib/data/user";
 
 type ProfileProps = {
   profile: any;
@@ -51,7 +51,14 @@ export default function MyProfile({ profile, schema }: ProfileProps) {
 }
 
 export async function getServerSideProps(ctx: NextPageContext) {
+  const { query } = ctx;
   const authenticated = isAuthenticated(ctx);
+  let _props: any = {};
+  if (authenticated && authenticated.sub) {
+    _props.profile = await getUserById({
+      id: parseInt(authenticated.sub as string, 10),
+    });
+  }
   const schema = getSchema("User", {
     omit: [
       "hash",
@@ -63,31 +70,9 @@ export async function getServerSideProps(ctx: NextPageContext) {
       "id",
     ],
   });
-  if (authenticated && authenticated.sub) {
-    const profile = await client.user.findFirst({
-      where: { id: authenticated.sub as unknown as number },
-      select: {
-        email: true,
-        id: true,
-        name: true,
-        phone_number: true,
-        address_1: true,
-        address_2: true,
-        city: true,
-        state: true,
-        zip_code: true,
-      },
-    });
-    return {
-      props: {
-        profile,
-        schema,
-      },
-    };
-  }
   return {
-    props: {
-      schema,
-    },
+    // this fixes serializing dates some how
+    // just wild
+    props: { ...JSON.parse(JSON.stringify(_props)), schema },
   };
 }

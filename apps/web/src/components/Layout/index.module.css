@@ -3,11 +3,11 @@
 }
 
 .main {
-  @apply container mx-auto h-screen pt-20;
+  @apply container mx-auto pt-20;
 }
 
 .wrapper {
-  @apply bg-gradient-to-tr from-slate-50 to-slate-200;
+  @apply bg-gradient-to-tr from-slate-300  to-slate-100;
 }
 
 .sidebar {
