@@ -16,7 +16,6 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push --skip-generate",
     "db:seed": "tsx src/seed.ts",
-    "dev": "tsc --watch",
     "format": "prisma format",
     "generate": "prisma generate",
     "lint": "TIMING=1 eslint \"src/**/*.ts\"",

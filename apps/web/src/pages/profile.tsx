@@ -11,6 +11,8 @@ import { FormSchema } from "@jjordy/form-schema";
 import { ComponentDictionary, controls } from "@/components/Forms";
 import getSchema from "@/lib/schema";
 import { getUserById } from "@/lib/data/user";
+import useToast from "@/hooks/useToast";
+import { Card } from "@jjordy/ui";
 
 type ProfileProps = {
   profile: any;
@@ -19,33 +21,48 @@ type ProfileProps = {
 
 export default function MyProfile({ profile, schema }: ProfileProps) {
   useAuth({ onFail: () => push("/sign-in") });
+  const { createToast } = useToast();
   const { push } = useRouter();
   const { mutate } = useSWRConfig();
   const updateProfile = useCallback((values: any) => {
     api
       .put("/user", values)
-      .then(() => mutate("/user"))
+      .then(() => {
+        createToast({
+          title: "Success",
+          content: "Profile updated.",
+          variant: "primary",
+        });
+        mutate("/user");
+      })
       .catch((err) => {
         console.log(err);
+        createToast({
+          title: "Error",
+          content: "Unable to updated profile",
+          variant: "error",
+        });
       });
   }, []);
   return (
     <Layout>
-      <div className="flex items-center justify-center">
-        <h1 className="text-xl font-semibold tracking-wide">My Profile</h1>
-      </div>
-      <hr className="my-8 block" />
-      <FormSchema
-        name="create_ticket_form"
-        schema={schema}
-        debug
-        defaultValues={profile}
-        uiSchema={{
-          controls,
-        }}
-        components={ComponentDictionary}
-        onSubmit={updateProfile}
-      />
+      <Card>
+        <div className="flex items-center justify-center">
+          <h1 className="text-xl font-semibold tracking-wide">My Profile</h1>
+        </div>
+        <hr className="my-8 block" />
+        <FormSchema
+          name="create_ticket_form"
+          schema={schema}
+          debug
+          defaultValues={profile}
+          uiSchema={{
+            controls,
+          }}
+          components={ComponentDictionary}
+          onSubmit={updateProfile}
+        />
+      </Card>
     </Layout>
   );
 }

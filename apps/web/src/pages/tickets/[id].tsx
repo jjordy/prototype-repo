@@ -14,6 +14,7 @@ import useTicketById from "@/hooks/useTicketById";
 import { serialize } from "@/lib/content";
 import Content from "@/components/Content";
 import useToast from "@/hooks/useToast";
+import { RouterOutput, trpc } from "@/lib/trpc";
 
 type IndexPageProps = {
   ticket: Ticket;
@@ -23,11 +24,15 @@ type IndexPageProps = {
 export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
   const { query } = useRouter();
   const [editTicketContent, setEditTicketContent] = useState(false);
+  const id = parseInt(query.id as string, 10);
+  const { data } = trpc.healthcheck.useQuery();
+  console.log(data);
   const { createComment, updateTicket, ticket } = useTicketById({
     fallbackData: ssTicket,
     //@ts-expect-error
     id: query?.id,
   });
+  const content: any = ticket?.content;
   return (
     <Layout>
       <h2 className="my-4 text-2xl font-medium">{ticket?.title}</h2>
@@ -46,7 +51,7 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
               {editTicketContent ? (
                 <FormSchema
                   defaultValues={{
-                    content: ticket?.content?.schema,
+                    content: content?.schema,
                   }}
                   name="edit_ticket_content_form"
                   debug
@@ -64,7 +69,7 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
                   }}
                 />
               ) : (
-                <Content content={ticket?.content?.schema || []} />
+                <Content content={content?.schema || []} />
               )}
             </div>
           </Card>
@@ -123,29 +128,34 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
           </Card>
         </div>
       </div>
-      <div className="min-h-[200px] pt-8">
-        <h4 className="text-lg font-medium">Comments</h4>
-        <hr className="my-4" />
-        <FormSchema
-          defaultValues={{ comment: "" }}
-          name="add_comment_form"
-          debug
-          onSubmit={createComment}
-          schema={{
-            $schema: "http://json-schema.org/draft-07/schema#",
-            properties: {
-              comment: {
-                type: "object",
-                component: "rte",
-                title: "Add a comment",
-                isNotEmpty: true,
-              },
-            },
-          }}
-        />
-        {ticket?.comments?.map((comment) => (
-          <Comment comment={comment} key={`comment_${comment?.id}`} />
-        ))}
+      <div className="flex space-x-8">
+        <div className="w-5/6">
+          <div className="min-h-[200px] pt-8">
+            <h4 className="text-lg font-medium">Comments</h4>
+            <hr className="my-4" />
+            <FormSchema
+              defaultValues={{ comment: "" }}
+              name="add_comment_form"
+              debug
+              onSubmit={createComment}
+              schema={{
+                $schema: "http://json-schema.org/draft-07/schema#",
+                properties: {
+                  comment: {
+                    type: "object",
+                    component: "rte",
+                    title: "Add a comment",
+                    isNotEmpty: true,
+                  },
+                },
+              }}
+            />
+            {ticket?.comments?.map((comment) => (
+              <Comment comment={comment} key={`comment_${comment?.id}`} />
+            ))}
+          </div>
+        </div>
+        <div className="w-1/6"></div>
       </div>
     </Layout>
   );

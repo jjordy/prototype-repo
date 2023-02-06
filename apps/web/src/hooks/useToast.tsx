@@ -10,19 +10,19 @@ type Toast = {
   id?: string;
 };
 
-type UseToastProps = {};
+type UseToastProps = {} | undefined;
 
 const toastsAtom = atom<Toast[]>([]);
 
-export default function useToast({}: UseToastProps) {
+export default function useToast(props?: UseToastProps) {
   const [toasts, setToasts] = useAtom(toastsAtom);
-  let _timer;
+  let _timer: NodeJS.Timeout;
   const createToast = (toast: Toast) => {
     const newToast = { ...toast, id: nanoid() };
     setToasts((t) => [...t, newToast]);
-    _timer = setTimeout(() => {
-      deleteToast(newToast);
-    }, 1500);
+    // _timer = setTimeout(() => {
+    //   deleteToast(newToast);
+    // }, 1500);
   };
   useEffect(() => {
     return () => clearTimeout(_timer);

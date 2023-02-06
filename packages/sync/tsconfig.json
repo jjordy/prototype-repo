@@ -5,7 +5,9 @@
     "strict": true,
     "declaration": true,
     "lib": [
-      "esnext"
+      "esnext",
+      "dom",
+      "DOM.Iterable"
     ],
     "esModuleInterop": true
   },

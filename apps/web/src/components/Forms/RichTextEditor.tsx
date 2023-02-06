@@ -1,14 +1,15 @@
 import React, { useCallback, useMemo, useRef } from "react";
 import isHotkey from "is-hotkey";
-import { Editable, withReact, useSlate, Slate } from "slate-react";
+import { Editable, withReact, useSlate, Slate, ReactEditor } from "slate-react";
 import {
   Editor,
   Transforms,
   createEditor,
   Descendant,
   Element as SlateElement,
+  BaseEditor,
 } from "slate";
-import { withHistory } from "slate-history";
+import { withHistory, HistoryEditor } from "slate-history";
 import cn from "classnames";
 
 import {
@@ -17,7 +18,6 @@ import {
   BiUnderline,
   BiCode,
   BiHeading,
-  BiBlock,
   BiListOl,
   BiListUl,
   BiAlignJustify,
@@ -48,6 +48,17 @@ const Button = ({ active, children, ...rest }: any) => {
     </button>
   );
 };
+
+type CustomElement = { type: string; children: CustomText[]; align?: string };
+type CustomText = { text: string; bold?: true; italic?: true; code?: true };
+
+declare module "slate" {
+  interface CustomTypes {
+    Editor: BaseEditor & ReactEditor & HistoryEditor;
+    Element: CustomElement;
+    Text: CustomText;
+  }
+}
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
@@ -100,7 +111,7 @@ export const RichTextEditor = ({
           renderLeaf={renderLeaf}
           placeholder="Enter some rich text…"
           spellCheck
-          className="prose prose-slate min-h-[150px]"
+          className="prose prose-slate container mx-auto min-h-[150px] max-w-[1150px]"
           autoFocus
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
@@ -129,7 +140,6 @@ const toggleBlock = (editor: Editor, format: string) => {
     match: (n) =>
       !Editor.isEditor(n) &&
       SlateElement.isElement(n) &&
-      //@ts-expect-error
       LIST_TYPES.includes(n.type) &&
       !TEXT_ALIGN_TYPES.includes(format),
     split: true,
@@ -137,12 +147,10 @@ const toggleBlock = (editor: Editor, format: string) => {
   let newProperties: Partial<SlateElement>;
   if (TEXT_ALIGN_TYPES.includes(format)) {
     newProperties = {
-      //@ts-expect-error
       align: isActive ? undefined : format,
     };
   } else {
     newProperties = {
-      //@ts-expect-error
       type: isActive ? "paragraph" : isList ? "list-item" : format,
     };
   }

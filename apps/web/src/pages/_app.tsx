@@ -2,10 +2,11 @@ import "@/css/globals.css";
 import "@jjordy/ui/styles.css";
 import { SWRConfig } from "swr";
 import { Inter } from "@next/font/google";
+import { trpc } from "@/lib/trpc";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function App({ Component, pageProps }: any) {
+function App({ Component, pageProps }: any) {
   return (
     <div className={inter.className}>
       <SWRConfig value={{ refreshInterval: 0 }}>
@@ -14,3 +15,5 @@ export default function App({ Component, pageProps }: any) {
     </div>
   );
 }
+
+export default trpc.withTRPC(App);
