@@ -4,6 +4,7 @@ import { Prisma } from "@jjordy/data";
 import type { Comment } from "@/lib/data/comment";
 import { serialize } from "@/lib/content";
 import Content from "./Content";
+import { Card } from "@jjordy/ui";
 
 type CommentProps = {
   comment: Comment;
@@ -11,7 +12,7 @@ type CommentProps = {
 
 export default function Comment({ comment }: CommentProps) {
   return (
-    <div className="mb-4 flex flex-col rounded-2xl border border-slate-300 bg-white p-2 shadow">
+    <Card className="mb-4">
       <div className="mb-2 flex items-center font-medium">
         {comment?.author?.name}
         <div className="mr-auto"></div>
@@ -23,6 +24,6 @@ export default function Comment({ comment }: CommentProps) {
         </Badge>
       </div>
       <Content content={comment?.content?.schema || []} />
-    </div>
+    </Card>
   );
 }

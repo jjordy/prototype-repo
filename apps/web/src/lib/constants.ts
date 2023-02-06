@@ -20,6 +20,9 @@ export const TICKET_SELECT_DATA: Prisma.TicketSelect = {
   updated_at: true,
   comments: {
     select: COMMENT_SELECT_DATA,
+    orderBy: {
+      created_at: "desc",
+    },
   },
   content: true,
   _count: true,

@@ -13,6 +13,7 @@ import { FormSchema } from "@/components/Forms";
 import useTicketById from "@/hooks/useTicketById";
 import { serialize } from "@/lib/content";
 import Content from "@/components/Content";
+import useToast from "@/hooks/useToast";
 
 type IndexPageProps = {
   ticket: Ticket;
@@ -32,8 +33,8 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
       <h2 className="my-4 text-2xl font-medium">{ticket?.title}</h2>
       <div className="flex space-x-8">
         <div className="w-5/6">
-          <Card>
-            <div className=" group min-h-[550px] outline-slate-50 hover:outline">
+          <Card className="p-16">
+            <div className=" group min-h-[550px]">
               <div className="relative flex justify-end">
                 <button
                   onClick={() => setEditTicketContent((prev) => !prev)}
@@ -122,12 +123,9 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
           </Card>
         </div>
       </div>
-      <div className="min-h-[200px]">
+      <div className="min-h-[200px] pt-8">
         <h4 className="text-lg font-medium">Comments</h4>
         <hr className="my-4" />
-        {ticket?.comments?.map((comment) => (
-          <Comment comment={comment} key={`comment_${comment?.id}`} />
-        ))}
         <FormSchema
           defaultValues={{ comment: "" }}
           name="add_comment_form"
@@ -145,6 +143,9 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
             },
           }}
         />
+        {ticket?.comments?.map((comment) => (
+          <Comment comment={comment} key={`comment_${comment?.id}`} />
+        ))}
       </div>
     </Layout>
   );

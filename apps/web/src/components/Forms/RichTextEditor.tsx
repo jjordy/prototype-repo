@@ -40,7 +40,7 @@ const Button = ({ active, children, ...rest }: any) => {
       type="button"
       className={cn(
         "flex h-7 w-7 items-center justify-center rounded text-slate-500",
-        active && "!bg-slate-900"
+        active && "!bg-slate-900 text-slate-100"
       )}
       {...rest}
     >
@@ -65,13 +65,27 @@ export const RichTextEditor = ({
 
   return (
     <Slate editor={editor} value={initialValue} onChange={onChange}>
-      <div className="flex items-center rounded-t border border-slate-200 bg-slate-100 p-1">
+      <div className="flex items-center rounded-t-2xl border border-slate-200 bg-slate-100 p-1">
         <MarkButton format="bold" children={<BiBold />} />
         <MarkButton format="italic" children={<BiItalic />} />
         <MarkButton format="underline" children={<BiUnderline />} />
         <MarkButton format="code" children={<BiCode />} />
-        <BlockButton format="heading-one" children={<BiHeading />} />
-        <BlockButton format="heading-two" children={<BiHeading />} />
+        <BlockButton
+          format="heading-one"
+          children={
+            <div className="flex items-center text-xs">
+              <BiHeading />1
+            </div>
+          }
+        />
+        <BlockButton
+          format="heading-two"
+          children={
+            <div className="flex items-center text-xs">
+              <BiHeading />2
+            </div>
+          }
+        />
         <BlockButton format="block-quote" children={<BiChat />} />
         <BlockButton format="numbered-list" children={<BiListOl />} />
         <BlockButton format="bulleted-list" children={<BiListUl />} />
@@ -80,7 +94,7 @@ export const RichTextEditor = ({
         <BlockButton format="right" children={<BiAlignRight />} />
         <BlockButton format="justify" children={<BiAlignJustify />} />
       </div>
-      <div className="mb-2 rounded-b border-b border-r border-l border-slate-300 bg-white p-2">
+      <div className="mb-2 rounded-b-2xl border-b border-r border-l border-slate-300 bg-white py-2 px-4">
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
@@ -191,13 +205,13 @@ const Element = ({ attributes, children, element }: any) => {
       );
     case "heading-one":
       return (
-        <h1 style={style} className="text-2xl" {...attributes}>
+        <h1 style={style} {...attributes}>
           {children}
         </h1>
       );
     case "heading-two":
       return (
-        <h2 style={style} className="text-xl" {...attributes}>
+        <h2 style={style} {...attributes}>
           {children}
         </h2>
       );
@@ -215,9 +229,9 @@ const Element = ({ attributes, children, element }: any) => {
       );
     case "code":
       return (
-        <div className="rounded bg-slate-50 p-2">
+        <div>
           <pre style={style} {...attributes}>
-            <code className="text-mono">{children}</code>
+            <code>{children}</code>
           </pre>
         </div>
       );
@@ -287,6 +301,6 @@ const MarkButton = ({ format, children }: any) => {
 const defaultInitialValue: Descendant[] = [
   {
     type: "paragraph",
-    children: [{ text: "" }, { text: "" }, { text: "" }],
+    children: [{ text: "" }],
   },
 ];

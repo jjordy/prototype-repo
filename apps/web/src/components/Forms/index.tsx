@@ -191,7 +191,7 @@ export const ComponentDictionary = {
             value || [
               {
                 type: "paragraph",
-                children: [{ text: "" }, { text: "" }, { text: "" }],
+                children: [{ text: "" }],
               },
             ]
           }
@@ -264,6 +264,7 @@ export const controls: UIControls = {
   SubmitButton: (props) => (
     <Button
       type="submit"
+      variant="success"
       {...props}
       className="flex w-full items-center justify-center text-xl font-semibold uppercase"
     >
