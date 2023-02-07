@@ -27,6 +27,7 @@
   "author": "Jordan Addison <jordanrileyaddison@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@jjordy/env": "*",
     "@prisma/client": "4.9.0"
   },
   "devDependencies": {

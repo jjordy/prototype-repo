@@ -3,7 +3,7 @@ import cn from "classnames";
 
 type ButtonProps = React.ComponentProps<"button"> & {
   size?: "small" | "medium" | "large";
-  variant?: "primary" | "error" | "transparent";
+  variant?: "primary" | "error" | "transparent" | "success";
   active?: boolean;
 };
 
@@ -24,13 +24,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         type="button"
         {...rest}
         className={cn(
-          "rounded-lg transition duration-75 ease-in-out",
+          "rounded-2xl shadow-2xl transition duration-75 ease-in-out",
           className,
           size === "small" && " px-3 py-2",
           size === "medium" && " px-4 py-3",
           variant === "primary" &&
-            "bg-indigo-500 text-white shadow-xl hover:bg-indigo-600",
+            "bg-indigo-500 text-white hover:bg-indigo-600",
           variant === "transparent" && "",
+          variant === "success" && "bg-emerald-500 text-white",
           active && "bg-blue-600"
         )}
       >

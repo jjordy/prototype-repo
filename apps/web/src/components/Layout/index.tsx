@@ -41,7 +41,7 @@ export default function Layout({ children }: LayoutProps) {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/api/v1/logout " className="text-slate-600">
+                  <Link href="/api/logout " className="text-slate-600">
                     Logout
                   </Link>
                 </li>

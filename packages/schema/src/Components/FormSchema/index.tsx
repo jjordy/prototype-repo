@@ -27,7 +27,7 @@ export const FormSchema = ({
   components = {},
   uiSchema,
   debug = false,
-  children = () => <></>,
+  children,
 }: FormSchemaProps) => {
   const ctx = useContext(FormContext);
   const { handleSubmit, ...formProps } = useForm({
@@ -50,6 +50,7 @@ export const FormSchema = ({
       ctx.registerForm({ name, ref: formRef.current });
     }
   }, []);
+  console.log(typeof children === "function");
   return (
     <form
       data-testid={`test_${name}`}
@@ -64,8 +65,9 @@ export const FormSchema = ({
         components={components}
         uiSchema={uiSchema}
         defaultValues={defaultValues}
+        renderSubmit={typeof children !== "function"}
       />
-      {children(formProps)}
+      {children && children(formProps)}
     </form>
   );
 };

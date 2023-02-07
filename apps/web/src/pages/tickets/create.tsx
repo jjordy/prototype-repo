@@ -1,35 +1,13 @@
 import Layout from "@/components/Layout";
-import { Modal } from "@jjordy/ui";
-import { useRouter } from "next/router";
-import { FormSchema } from "@jjordy/form-schema";
-import { ComponentDictionary, controls } from "@/components/Forms";
+import { JSONFormSchema } from "@jjordy/form-schema";
 import { NextPageContext } from "next";
 import getSchema from "@/lib/form-schema";
-import useTickets from "@/hooks/useTickets";
+import CreateTicket from "@/features/ticket/Create";
 
-export default function CreateTicket({ schema }: any) {
-  const { push } = useRouter();
-  const { create } = useTickets({});
+export default function CreateTicketPage(props: { schema: JSONFormSchema }) {
   return (
     <Layout>
-      <Modal
-        open
-        onClose={() => push("/")}
-        title={<h1 className="text-2xl">Create a new ticket</h1>}
-      >
-        <hr />
-        <FormSchema
-          debug
-          name="create_ticket_form"
-          schema={schema}
-          defaultValues={{}}
-          uiSchema={{
-            controls,
-          }}
-          components={ComponentDictionary}
-          onSubmit={create}
-        />
-      </Modal>
+      <CreateTicket {...props} />
     </Layout>
   );
 }

@@ -3,9 +3,10 @@ import {
   FieldComponentProps,
   UIControls,
   FormSchema as BaseFormSchema,
+  FormSchemaProps,
 } from "@jjordy/form-schema";
 import styles from "./index.module.css";
-import { PlusIcon, SaveAsIcon, XIcon } from "@heroicons/react/solid";
+import { HiPlus, HiSaveAs, HiX } from "react-icons/hi";
 import { Button, Combobox } from "@jjordy/ui";
 import { RichTextEditor } from "./RichTextEditor";
 import { trpc } from "@/lib/clients/trpc";
@@ -296,7 +297,7 @@ export const controls: UIControls = {
       className="ml-2 rounded-lg border-2 border-pink-500 p-1 text-pink-500"
       {...props}
     >
-      <XIcon className="h-5 w-5" />
+      <HiX className="h-5 w-5" />
     </button>
   ),
   AddRowButton: (props) => (
@@ -305,7 +306,7 @@ export const controls: UIControls = {
       className=" flex items-center rounded bg-sky-100 p-1 text-sky-500"
       {...props}
     >
-      <PlusIcon className="h-5 w-5" />
+      <HiPlus className="h-5 w-5" />
     </button>
   ),
   SubmitButton: (props) => (
@@ -315,7 +316,7 @@ export const controls: UIControls = {
       {...props}
       className="flex w-full items-center justify-center text-xl font-semibold uppercase"
     >
-      Save <SaveAsIcon className="ml-2 h-5 w-5" />
+      Save <HiSaveAs className="ml-2 h-5 w-5" />
     </Button>
   ),
   ArrayErrorMessage: ({ children }) => (
@@ -331,7 +332,7 @@ export const controls: UIControls = {
   ),
 };
 
-export const FormSchema = (props: any) => (
+export const FormSchema = (props: FormSchemaProps) => (
   <BaseFormSchema
     uiSchema={{ controls, ...(props.uiSchema || {}) }}
     components={{ ...(props.components || {}), ...ComponentDictionary }}

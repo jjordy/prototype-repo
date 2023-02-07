@@ -5,7 +5,7 @@ export default function Logo() {
     <div className="flex items-center space-x-2">
       <div className="rounded-2xl bg-sky-100 p-1">
         <div className="flex items-center space-x-1">
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500 text-white hover:animate-ping">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white hover:animate-ping">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
@@ -19,7 +19,7 @@ export default function Logo() {
               />
             </svg>
           </div>
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-500 text-white hover:animate-ping">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-fuchsia-500 text-white hover:animate-ping">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"

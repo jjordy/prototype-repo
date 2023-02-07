@@ -21,9 +21,18 @@
       "persistent": true
     },
     "db:generate": {
-      "cache": false
+      "cache": false,
+      "dependsOn": [
+        "env"
+      ]
     },
     "db:push": {
+      "cache": false,
+      "dependsOn": [
+        "env"
+      ]
+    },
+    "env": {
       "cache": false
     }
   }

@@ -11,6 +11,7 @@ type RenderSchemaProps = {
   formProps: Omit<UseFormReturn, "handleSubmit">;
   defaultValues: any;
   uiSchema?: UISchema | null;
+  renderSubmit?: boolean;
 };
 
 export default function RenderSchema({
@@ -18,6 +19,7 @@ export default function RenderSchema({
   components,
   formProps,
   uiSchema = null,
+  renderSubmit = true,
 }: RenderSchemaProps) {
   const { fields } = useRenderSchema({ schema, formProps });
   const controls = useControls({ uiSchema });
@@ -79,9 +81,7 @@ export default function RenderSchema({
             );
           }
         })}
-      <div>
-        <controls.SubmitButton />
-      </div>
+      {renderSubmit && <controls.SubmitButton />}
     </div>
   );
 }

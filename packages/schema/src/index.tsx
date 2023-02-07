@@ -1,4 +1,5 @@
 export { FormSchema } from "./Components/FormSchema";
+export type { FormSchemaProps } from "./Components/FormSchema";
 export { FormSchemaProvider } from "./Components/FormContext";
 export { useFormSchema } from "./hooks/useFormSchema";
 
