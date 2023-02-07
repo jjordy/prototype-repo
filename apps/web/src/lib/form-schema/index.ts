@@ -2,6 +2,7 @@
 // @ts-expect-error
 import schema from "@jjordy/data/json-schema.json";
 import { JSONFormSchema } from "@jjordy/form-schema";
+
 type Options = {
   omit?: string[];
   mutate?: (key: string, values: JSONFormSchema) => JSONFormSchema;

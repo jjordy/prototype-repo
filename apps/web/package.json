@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroicons/react": "1.0.6",
-    "@jjordy/data": "*",
     "@jjordy/form-schema": "*",
     "@jjordy/sync": "*",
     "@jjordy/ui": "*",
@@ -37,8 +35,7 @@
     "slate-history": "^0.86.0",
     "slate-hyperscript": "^0.77.0",
     "slate-react": "^0.90.0",
-    "superjson": "1.9.0",
-    "swr": "^2.0.3"
+    "superjson": "1.9.0"
   },
   "devDependencies": {
     "@jjordy/eslint-config-custom": "*",
