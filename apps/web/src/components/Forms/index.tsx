@@ -7,8 +7,6 @@ import {
 import styles from "./index.module.css";
 import { PlusIcon, SaveAsIcon, XIcon } from "@heroicons/react/solid";
 import { Button, Combobox } from "@jjordy/ui";
-import { api } from "@/lib/clients/rest";
-import useSWR from "swr";
 import { RichTextEditor } from "./RichTextEditor";
 import { trpc } from "@/lib/clients/trpc";
 
