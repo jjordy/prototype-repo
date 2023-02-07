@@ -1,49 +1,44 @@
-import { useCallback } from "react";
 import Layout from "@/components/Layout";
-import { api } from "@/lib";
+import { FormSchema } from "@/components/Forms/index";
 import { useRouter } from "next/router";
-import { useSWRConfig } from "swr";
 import useAuth from "@/hooks/useAuth";
 import { NextPageContext } from "next";
-import client from "@jjordy/data";
-import { isAuthenticated } from "@/lib/auth";
-import { FormSchema } from "@jjordy/form-schema";
-import { ComponentDictionary, controls } from "@/components/Forms";
 import getSchema from "@/lib/schema";
-import { getUserById } from "@/lib/data/user";
 import useToast from "@/hooks/useToast";
 import { Card } from "@jjordy/ui";
+import { trpc } from "@/lib/clients/trpc";
+import { JSONFormSchema } from "@jjordy/form-schema";
 
 type ProfileProps = {
-  profile: any;
-  schema: any;
+  schema: JSONFormSchema;
 };
 
-export default function MyProfile({ profile, schema }: ProfileProps) {
-  useAuth({ onFail: () => push("/sign-in") });
-  const { createToast } = useToast();
+export default function MyProfile({ schema }: ProfileProps) {
   const { push } = useRouter();
-  const { mutate } = useSWRConfig();
-  const updateProfile = useCallback((values: any) => {
-    api
-      .put("/user", values)
-      .then(() => {
-        createToast({
-          title: "Success",
-          content: "Profile updated.",
-          variant: "primary",
-        });
-        mutate("/user");
-      })
-      .catch((err) => {
-        console.log(err);
-        createToast({
-          title: "Error",
-          content: "Unable to updated profile",
-          variant: "error",
-        });
+  const { user } = useAuth({ onFail: () => push("/sign-in") });
+  const { createToast } = useToast();
+  const { data: profile, refetch } = trpc.user.byId.useQuery(
+    { id: (user && user.id) || 0 },
+    { enabled: Boolean(user?.id) }
+  );
+
+  const { mutate } = trpc.user.update.useMutation({
+    onSuccess: () => {
+      refetch();
+      createToast({
+        title: "Success",
+        content: "Profile updated",
+        variant: "primary",
       });
-  }, []);
+    },
+    onError: () => {
+      createToast({
+        title: "Error",
+        content: "Unable to update profile",
+        variant: "error",
+      });
+    },
+  });
   return (
     <Layout>
       <Card>
@@ -51,31 +46,21 @@ export default function MyProfile({ profile, schema }: ProfileProps) {
           <h1 className="text-xl font-semibold tracking-wide">My Profile</h1>
         </div>
         <hr className="my-8 block" />
-        <FormSchema
-          name="create_ticket_form"
-          schema={schema}
-          debug
-          defaultValues={profile}
-          uiSchema={{
-            controls,
-          }}
-          components={ComponentDictionary}
-          onSubmit={updateProfile}
-        />
+        {schema && profile && (
+          <FormSchema
+            name="create_ticket_form"
+            schema={schema}
+            debug
+            defaultValues={profile}
+            onSubmit={mutate}
+          />
+        )}
       </Card>
     </Layout>
   );
 }
 
 export async function getServerSideProps(ctx: NextPageContext) {
-  const { query } = ctx;
-  const authenticated = isAuthenticated(ctx);
-  let _props: any = {};
-  if (authenticated && authenticated.sub) {
-    _props.profile = await getUserById({
-      id: parseInt(authenticated.sub as string, 10),
-    });
-  }
   const schema = getSchema("User", {
     omit: [
       "hash",
@@ -88,8 +73,6 @@ export async function getServerSideProps(ctx: NextPageContext) {
     ],
   });
   return {
-    // this fixes serializing dates some how
-    // just wild
-    props: { ...JSON.parse(JSON.stringify(_props)), schema },
+    props: { schema },
   };
 }

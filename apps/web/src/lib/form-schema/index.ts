@@ -5,6 +5,7 @@ import { JSONFormSchema } from "@jjordy/form-schema";
 type Options = {
   omit?: string[];
   mutate?: (key: string, values: JSONFormSchema) => JSONFormSchema;
+  add?: Record<string, JSONFormSchema>;
 };
 
 const titleCase = (s: string) =>
@@ -50,11 +51,20 @@ function mutateOmissions({ mutable, key, options }: MutationFnProps) {
   }
 }
 
+function mutateAdditions({ mutable, key, options }: MutationFnProps) {
+  if (options && options.add) {
+    Object.keys(options.add).map((key) => {
+      mutable[key] = options.add?.[key];
+    });
+  }
+}
+
 const MUTATIONS = [
   mutateTitle,
   mutateErrorMessage,
   mutateIsNotEmpty,
   mutateOmissions,
+  mutateAdditions,
 ];
 
 function runMutations(props: MutationFnProps) {

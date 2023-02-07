@@ -1,17 +1,7 @@
-/**
- *
- * This is an example router, you can delete this file and then update `../pages/api/trpc/[trpc].tsx`
- */
 import { router, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import client, { Prisma } from "@jjordy/data";
-
-/**
- * Default selector for Ticket.
- * It's important to always explicitly say which fields you want to return in order to not leak extra information
- * @see https://github.com/prisma/prisma/issues/9353
- */
 
 const defaultTicketSelect = Prisma.validator<Prisma.TicketSelect>()({
   title: true,
@@ -45,29 +35,27 @@ const defaultTicketSelect = Prisma.validator<Prisma.TicketSelect>()({
   },
 });
 
-export const postRouter = router({
+export const ticketRouter = router({
   list: publicProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.number().nullish(),
+        id: z.number().optional(),
+        NOT: z
+          .array(z.object({ assignee: z.object({ id: z.number() }) }))
+          .optional(),
       })
     )
     .query(async ({ input }) => {
-      /**
-       * For pagination docs you can have a look here
-       * @see https://trpc.io/docs/useInfiniteQuery
-       * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
-       */
-
       const limit = input.limit ?? 50;
-      const { cursor } = input;
+      const { cursor, id, NOT } = input;
+      const where = { id, NOT };
 
       const items = await client.ticket.findMany({
         select: defaultTicketSelect,
-        // get an extra item at the end which we'll use as next cursor
         take: limit + 1,
-        where: {},
+        where,
         cursor: cursor
           ? {
               id: cursor,
@@ -79,13 +67,9 @@ export const postRouter = router({
       });
       let nextCursor: typeof cursor | undefined = undefined;
       if (items.length > limit) {
-        // Remove the last item and use it as next cursor
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const nextItem = items.pop()!;
         nextCursor = nextItem.id;
       }
-
       return {
         items: items.reverse(),
         nextCursor,
@@ -99,7 +83,6 @@ export const postRouter = router({
     )
     .query(async ({ input }) => {
       const { id } = input;
-      console.log("HELLO HELLO I WAS INDEED CALLED", id);
       const ticket = await client.ticket.findUnique({
         where: { id },
         select: defaultTicketSelect,
@@ -129,5 +112,25 @@ export const postRouter = router({
         select: defaultTicketSelect,
       });
       return post;
+    }),
+  update: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        author_id: z.number().optional(),
+        content: z.any().optional(),
+        status: z.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]).optional(),
+        priority: z.enum(["LOW", "MEDIUM", "HIGH", "BLOCKER"]).optional(),
+        assignee_id: z.number().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const comment = await client.ticket.update({
+        data: input,
+        where: { id: input.id },
+        select: defaultTicketSelect,
+      });
+      return comment;
     }),
 });

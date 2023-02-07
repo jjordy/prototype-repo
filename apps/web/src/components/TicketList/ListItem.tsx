@@ -1,4 +1,4 @@
-import { Ticket } from "@/lib/data/ticket";
+import { Ticket } from "@jjordy/sync";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import Avatar from "../Avatar";

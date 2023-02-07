@@ -19,7 +19,7 @@ export const serialize = (node: any) => {
     return string;
   }
 
-  const children: any = node.children?.map((n) => serialize(n)).join("");
+  const children: any = node.children?.map((n: any) => serialize(n)).join("");
   switch (node.type) {
     case "heading-one":
       return `<h1>${children}</h1>`;

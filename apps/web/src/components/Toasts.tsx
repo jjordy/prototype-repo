@@ -9,7 +9,7 @@ export default function Toasts() {
       <div className="fixed right-0 z-10 flex h-12 w-96 flex-col items-center">
         {toasts?.map((toast) => (
           <div
-            key={`active_toast_${toast.title}`}
+            key={`active_toast_${toast.id}`}
             className={classNames(
               "z-10 mt-4 mr-24 w-96 rounded-2xl p-4",
               toast.variant === "primary" && " bg-indigo-500 text-white",

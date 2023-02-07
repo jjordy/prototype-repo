@@ -2,7 +2,7 @@ import "@/css/globals.css";
 import "@jjordy/ui/styles.css";
 import { SWRConfig } from "swr";
 import { Inter } from "@next/font/google";
-import { trpc } from "@/lib/trpc";
+import { trpc } from "@/lib/clients/trpc";
 
 const inter = Inter({ subsets: ["latin"] });
 

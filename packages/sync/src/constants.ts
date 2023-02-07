@@ -1,4 +1,6 @@
 import { Prisma } from "@jjordy/data";
+import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
+import { AppRouter } from "./trpc";
 
 export const COMMENT_SELECT_DATA: Prisma.CommentSelect = {
   content: true,
@@ -44,6 +46,12 @@ export const USER_SELECT_DATA: Prisma.UserSelect = {
   city: true,
   state: true,
   zip_code: true,
-  // created_at: true,
-  // updated_at: true,
+  created_at: true,
+  updated_at: true,
 };
+
+export type RouterInput = inferRouterInputs<AppRouter>;
+export type RouterOutput = inferRouterOutputs<AppRouter>;
+export type Ticket = RouterOutput["ticket"]["byId"];
+export type User = RouterOutput["user"]["byId"];
+export type Comment = RouterOutput["comment"]["byId"];

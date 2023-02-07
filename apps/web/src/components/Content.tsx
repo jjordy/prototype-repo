@@ -1,8 +1,8 @@
 import { serialize } from "@/lib/content";
 import cn from "classnames";
-
+import { Prisma } from "@jjordy/data";
 type ContentProps = React.ComponentProps<"div"> & {
-  content: Record<string, any>;
+  content?: Prisma.JsonValue;
 };
 
 export default function Content({ content, className }: ContentProps) {

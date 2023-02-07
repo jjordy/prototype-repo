@@ -1,36 +1,20 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import Comment from "@/components/Comment";
-import { isAuthenticated } from "@/lib/auth";
 import { Card } from "@jjordy/ui";
-import { NextPageContext } from "next";
 import { useRouter } from "next/router";
-import { getTicketById, Ticket } from "@/lib/data/ticket";
 import Priority from "@/components/Priority";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import { FormSchema } from "@/components/Forms";
 import useTicketById from "@/hooks/useTicketById";
-import { serialize } from "@/lib/content";
 import Content from "@/components/Content";
-import useToast from "@/hooks/useToast";
-import { RouterOutput, trpc } from "@/lib/trpc";
 
-type IndexPageProps = {
-  ticket: Ticket;
-  children: React.ReactNode;
-};
-
-export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
+export default function TicketByIdPage() {
   const { query } = useRouter();
   const [editTicketContent, setEditTicketContent] = useState(false);
-  const id = parseInt(query.id as string, 10);
-  const { data } = trpc.healthcheck.useQuery();
-  console.log(data);
   const { createComment, updateTicket, ticket } = useTicketById({
-    fallbackData: ssTicket,
-    //@ts-expect-error
-    id: query?.id,
+    id: Number(query.id),
   });
   const content: any = ticket?.content;
   return (
@@ -52,6 +36,7 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
                 <FormSchema
                   defaultValues={{
                     content: content?.schema,
+                    id: ticket?.id,
                   }}
                   name="edit_ticket_content_form"
                   debug
@@ -64,6 +49,10 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
                         component: "rte",
                         title: "Edit Ticket",
                         isNotEmpty: true,
+                      },
+                      id: {
+                        type: "number",
+                        component: "hidden",
                       },
                     },
                   }}
@@ -159,20 +148,4 @@ export default function TicketByIdPage({ ticket: ssTicket }: IndexPageProps) {
       </div>
     </Layout>
   );
-}
-
-export async function getServerSideProps(ctx: NextPageContext) {
-  const { query } = ctx;
-  const authenticated = isAuthenticated(ctx);
-  let _props: any = {};
-  if (authenticated && authenticated.sub) {
-    _props.ticket = await getTicketById({
-      id: parseInt(query.id as string, 10),
-    });
-  }
-  return {
-    // this fixes serializing dates some how
-    // just wild
-    props: { ...JSON.parse(JSON.stringify(_props)) },
-  };
 }

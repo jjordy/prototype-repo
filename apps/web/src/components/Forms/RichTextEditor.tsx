@@ -50,7 +50,13 @@ const Button = ({ active, children, ...rest }: any) => {
 };
 
 type CustomElement = { type: string; children: CustomText[]; align?: string };
-type CustomText = { text: string; bold?: true; italic?: true; code?: true };
+type CustomText = {
+  text: string;
+  bold?: true;
+  italic?: true;
+  code?: true;
+  underline?: true;
+};
 
 declare module "slate" {
   interface CustomTypes {

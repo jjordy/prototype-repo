@@ -1,27 +1,21 @@
 import Layout from "@/components/Layout";
-import { isAuthenticated } from "@/lib/auth";
 import { Card } from "@jjordy/ui";
-import { NextPageContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import cn from "classnames";
 import useAuth from "@/hooks/useAuth";
-import { getTickets, Ticket } from "@/lib/data/ticket";
-import { formatDistanceToNowStrict } from "date-fns";
 import { TicketList } from "@/components/TicketList";
+import { trpc } from "@/lib/clients/trpc";
 
-type IndexPageProps = {
-  myTickets: Ticket[];
-  otherTickets: Ticket[];
-};
-
-export default function IndexPage({
-  myTickets: tickets,
-  otherTickets,
-}: IndexPageProps) {
+export default function IndexPage() {
   const { pathname } = useRouter();
   const { user } = useAuth();
-
+  const { data: { items } = { items: [] } } = trpc.ticket.list.useQuery(
+    {
+      id: user?.id,
+    },
+    { enabled: Boolean(user?.id) }
+  );
   const authenticatedContent = (
     <div className="flex space-x-4">
       <div className="min-w-[250px]">
@@ -55,8 +49,8 @@ export default function IndexPage({
         </Card>
       </div>
       <div className="w-full">
-        <TicketList tickets={tickets} title="My Tickets" />
-        <TicketList tickets={otherTickets} title="Other Tickets" />
+        <TicketList tickets={items} title="My Tickets" />
+        {/* <TicketList tickets={otherTickets} title="Other Tickets" /> */}
       </div>
     </div>
   );
@@ -64,24 +58,4 @@ export default function IndexPage({
   return (
     <Layout>{user ? authenticatedContent : unauthenticatedContent}</Layout>
   );
-}
-
-export async function getServerSideProps(ctx: NextPageContext) {
-  const authenticated = isAuthenticated(ctx);
-  let _props: any = {};
-  if (authenticated && authenticated.sub) {
-    _props.myTickets = await getTickets({
-      assignee: {
-        id: parseInt(authenticated.sub, 10),
-      },
-    });
-    _props.otherTickets = await getTickets({
-      NOT: [{ assignee: { id: parseInt(authenticated.sub, 10) } }],
-    });
-  }
-  return {
-    // this fixes serializing dates some how
-    // just wild
-    props: { ...JSON.parse(JSON.stringify(_props)) },
-  };
 }

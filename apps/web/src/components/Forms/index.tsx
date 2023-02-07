@@ -7,7 +7,7 @@ import {
 import styles from "./index.module.css";
 import { PlusIcon, SaveAsIcon, XIcon } from "@heroicons/react/solid";
 import { Button, Combobox } from "@jjordy/ui";
-import { api } from "@/lib";
+import { api } from "@/lib/clients/rest";
 import useSWR from "swr";
 import { RichTextEditor } from "./RichTextEditor";
 
@@ -78,7 +78,31 @@ export const ComponentDictionary = {
       <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
-  password: ({ register, name, id, title, error }: FieldComponentProps) => (
+  hidden: ({
+    register,
+    name,
+    id,
+    title,
+    error,
+    description,
+  }: FieldComponentProps) => (
+    <FieldGroup>
+      <input
+        type="hidden"
+        {...register(name)}
+        id={id}
+        className={`${styles.inputBase} ${error ? styles.error : ""}`}
+      />
+    </FieldGroup>
+  ),
+  password: ({
+    register,
+    name,
+    id,
+    title,
+    error,
+    description,
+  }: FieldComponentProps) => (
     <FieldGroup>
       <Label id={id}>{title}</Label>
       <input
@@ -87,10 +111,18 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
+      <p className={styles.description}>{description && description}</p>
       <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
-  integer: ({ register, name, id, title, error }: FieldComponentProps) => (
+  integer: ({
+    register,
+    name,
+    id,
+    title,
+    error,
+    description,
+  }: FieldComponentProps) => (
     <FieldGroup>
       <Label id={id}>{title}</Label>
       <input
@@ -99,10 +131,18 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
+      <p className={styles.description}>{description && description}</p>
       <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
-  number: ({ register, name, id, title, error }: FieldComponentProps) => (
+  number: ({
+    register,
+    name,
+    id,
+    title,
+    error,
+    description,
+  }: FieldComponentProps) => (
     <FieldGroup>
       <Label id={id}>{title}</Label>
       <input
@@ -111,10 +151,18 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
+      <p className={styles.description}>{description && description}</p>
       <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
-  datetime: ({ register, name, id, title, error }: FieldComponentProps) => (
+  datetime: ({
+    register,
+    name,
+    id,
+    title,
+    error,
+    description,
+  }: FieldComponentProps) => (
     <FieldGroup>
       <Label id={id}>{title}</Label>
       <input
@@ -123,6 +171,7 @@ export const ComponentDictionary = {
         id={id}
         className={`${styles.inputBase} ${error ? styles.error : ""}`}
       />
+      <p className={styles.description}>{description && description}</p>
       <p className={styles.errorMessage}>{error && error.message}</p>
     </FieldGroup>
   ),
@@ -180,7 +229,6 @@ export const ComponentDictionary = {
   }: FieldComponentProps) => {
     const value = getValues(name);
     const handleChangeValue = (v: any) => {
-      console.log(v);
       setValue(name, { schema: v });
     };
     return (

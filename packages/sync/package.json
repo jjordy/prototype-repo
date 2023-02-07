@@ -1,7 +1,7 @@
 {
   "name": "@jjordy/sync",
   "version": "0.0.1",
-  "main": "dist/trpc.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
@@ -14,10 +14,10 @@
   "license": "MIT",
   "dependencies": {
     "@jjordy/data": "*",
-    "@prisma/client": "4.9.0",
     "@trpc/next": "^10.10.0",
     "@trpc/server": "^10.10.0",
-    "superjson": "1.12.2",
+    "jsonwebtoken": "9.0.0",
+    "superjson": "1.9.0",
     "zod": "3.20.2"
   },
   "devDependencies": {

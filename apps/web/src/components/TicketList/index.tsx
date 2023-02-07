@@ -1,5 +1,9 @@
-import { Ticket } from "@/lib/data/ticket";
 import { TicketListItem } from "./ListItem";
+
+import { RouterOutput, trpc } from "@/lib/clients/trpc";
+import { Ticket } from "@jjordy/sync";
+
+type Tickets = RouterOutput["ticket"]["list"]["items"];
 
 export function TicketList({
   tickets,

@@ -1,29 +1,40 @@
-import { api } from "@/lib";
-import useSWR from "swr";
-import { Prisma } from "@jjordy/data";
 import { useMemo } from "react";
-
-type User = Omit<Prisma.UserSelect, "salt" | "hash" | "_count">;
+import { trpc } from "@/lib/clients/trpc";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "@/lib/clients/rest";
+import useToast from "./useToast";
 
 type UseAuthProps = {
   onFail?: () => any;
 };
 
 export default function useAuth({ onFail }: UseAuthProps = {}) {
-  const { error, isLoading, isValidating } = useSWR("/auth", api.get);
-  const { data: user } = useSWR<User>(!error && !isLoading && "/user", api.get);
-
+  const { createToast } = useToast();
+  const { isError, isLoading, isFetched, refetch } = trpc.auth.get.useQuery();
+  const { mutateAsync: setToken } = useMutation({
+    mutationFn: async (data: { token: string }) => api.post("/token", data),
+    onSuccess: () => {
+      refetch();
+    },
+    onError: () => {},
+  });
   const authenticated = useMemo(() => {
-    if (!isLoading && !error) {
+    if (!isError && !isLoading) {
       return true;
     }
-    if (error && !isLoading && !isValidating && onFail) {
+    if (isError && !isLoading && isFetched && onFail) {
       onFail();
     }
     return false;
-  }, [error, isLoading]);
+  }, [isError, isLoading]);
+
+  const { data: user } = trpc.user.byId.useQuery(
+    { id: 1 },
+    { enabled: authenticated }
+  );
   return {
     authenticated,
     user,
+    setToken,
   };
 }

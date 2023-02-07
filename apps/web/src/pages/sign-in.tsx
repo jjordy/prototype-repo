@@ -1,30 +1,35 @@
-import { useCallback } from "react";
-import { Card, Button, Input, Modal } from "@jjordy/ui";
-import { useForm } from "react-hook-form";
+import { Modal } from "@jjordy/ui";
 import Layout from "@/components/Layout";
-import { api } from "@/lib";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import { useSWRConfig } from "swr";
 import { FormSchema } from "@/components/Forms";
+import { trpc } from "@/lib/clients/trpc";
+import useToast from "@/hooks/useToast";
+import useAuth from "@/hooks/useAuth";
 
-export default function SignUpPage() {
-  const { mutate } = useSWRConfig();
+export default function SignInPage() {
   const { push } = useRouter();
-  const { handleSubmit, register } = useForm();
-  const signin = useCallback((values: any) => {
-    api
-      .post("/sign-in", values)
-      .then(({ path }) => {
-        if (path) {
-          mutate("/auth");
-          push(path);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  const { createToast } = useToast();
+  const { setToken } = useAuth();
+  const { mutate: signin } = trpc.user.signin.useMutation({
+    onError: (err) => {
+      if (err?.data?.code === "NOT_FOUND") {
+        createToast({
+          title: "Error",
+          content: "Unable to log you in with that information",
+          variant: "error",
+        });
+      } else {
+        createToast({
+          title: "Error",
+          content: "Unable to log you in with that information",
+          variant: "error",
+        });
+      }
+    },
+    onSuccess: (data) => {
+      setToken(data).then(() => push("/"));
+    },
+  });
   return (
     <Layout>
       <Modal
@@ -59,7 +64,6 @@ export default function SignUpPage() {
               },
             },
             type: "object",
-            // required: ["email", "password"],
           }}
         />
       </Modal>

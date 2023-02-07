@@ -5,59 +5,55 @@ import { Ticket } from "@/lib/data/ticket";
 import { useCallback } from "react";
 import { api } from "@/lib";
 import useToast from "./useToast";
+import { trpc } from "@/lib/clients/trpc";
 
 type UseTicketsProps = {
-  fallbackData: Ticket;
   id: number;
 };
 
-export default function useTicketById({ fallbackData, id }: UseTicketsProps) {
+export default function useTicketById({ id }: UseTicketsProps) {
   const { push } = useRouter();
   const { createToast } = useToast({});
-  const { user } = useAuth({ onFail: () => push("/sign-in") });
-  const { data: ticket, mutate } = useSWR<Ticket>(`/tickets/${id}`, api.get, {
-    fallbackData,
+  useAuth({ onFail: () => push("/sign-in") });
+  const { data: ticket, refetch } = trpc.ticket.byId.useQuery({
+    id: id,
   });
-  const createComment = useCallback(
-    (values: { comment: string; ticket_id: number }) => {
-      api
-        .post("/comments", {
-          content: values?.comment,
-          author_id: user?.id,
-          ticket_id: ticket?.id,
-        })
-        .then(() => {
-          createToast({
-            title: "Success",
-            content: "Comment created!",
-            variant: "primary",
-          });
-          mutate();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+  const { mutate: createComment } = trpc.comment.create.useMutation({
+    onError: () => {
+      createToast({
+        title: "Error",
+        content: "Unable to create comment",
+        variant: "error",
+      });
     },
-    [user, ticket]
-  );
-  const updateTicket = useCallback(
-    (values: Ticket) => {
-      api
-        .put(`/tickets/${ticket?.id}`, values)
-        .then(() => {
-          mutate();
-          createToast({
-            title: "Success",
-            content: "Ticket updated!",
-            variant: "primary",
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    onSuccess: () => {
+      createToast({
+        title: "Success",
+        content: "Comment created!",
+        variant: "primary",
+      });
+      refetch();
     },
-    [user, ticket]
-  );
+  });
+
+  const { mutate: updateTicket } = trpc.ticket.update.useMutation({
+    onError: () => {
+      createToast({
+        title: "Error",
+        content: "Unable to update ticket.",
+        variant: "error",
+      });
+    },
+    onSuccess: () => {
+      createToast({
+        title: "Success",
+        content: "Ticket updated!",
+        variant: "primary",
+      });
+      refetch();
+    },
+  });
+
   return {
     ticket,
     createComment,

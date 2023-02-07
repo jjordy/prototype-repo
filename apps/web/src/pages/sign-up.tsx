@@ -1,29 +1,34 @@
-import { useCallback } from "react";
-import { Card, Input, Button } from "@jjordy/ui";
-import { useForm } from "react-hook-form";
 import Layout from "@/components/Layout";
-import { api } from "@/lib";
 import { useRouter } from "next/router";
-import { useSWRConfig } from "swr";
 import { Modal } from "@jjordy/ui";
+import { FormSchema } from "@/components/Forms";
+import getSchema from "@/lib/schema";
+import { JSONFormSchema } from "@jjordy/form-schema";
+import { trpc } from "@/lib/clients/trpc";
+import useToast from "@/hooks/useToast";
+import useAuth from "@/hooks/useAuth";
 
-export default function SignUpPage() {
-  const { mutate } = useSWRConfig();
-  const { handleSubmit, register } = useForm();
+export default function SignUpPage({ schema }: { schema: JSONFormSchema }) {
+  const { createToast } = useToast();
+  const { setToken } = useAuth();
   const { push } = useRouter();
-  const signin = useCallback((values: any) => {
-    api
-      .post("/sign-up", values)
-      .then(({ path }) => {
-        if (path) {
-          mutate("/auth");
-          push(path);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+  const { mutate } = trpc.user.signup.useMutation({
+    onSuccess: (data) => {
+      createToast({
+        title: "Success",
+        content: "Account created successfully.",
+        variant: "primary",
       });
-  }, []);
+      setToken(data).then(() => push("/profile"));
+    },
+    onError: () => {
+      createToast({
+        title: "Error",
+        content: "Unable to sign you up, please try again later.",
+        variant: "error",
+      });
+    },
+  });
   return (
     <Layout>
       <Modal
@@ -31,42 +36,59 @@ export default function SignUpPage() {
         onClose={() => push("/")}
         title={<h1 className="text-2xl">Sign Up</h1>}
       >
-        <form onSubmit={handleSubmit(signin)}>
-          <Input
-            type="text"
-            {...register("name")}
-            label="Name"
-            placeholder="John Doe"
-          />
-          <Input
-            type="email"
-            {...register("email")}
-            label="Email Address"
-            placeholder="johndoe@email.com"
-          />
-          <div className="flex w-full items-center space-x-4">
-            <Input
-              type="password"
-              {...register("password")}
-              placeholder="********"
-              label="Password"
-            />
-            <Input
-              type="password"
-              {...register("confirm_password")}
-              placeholder="********"
-              label="Confirm Password"
-            />
-          </div>
-          <Input
-            type="tel"
-            {...register("phone_number")}
-            placeholder="+1*******"
-            label="Phone Number (Optional)"
-          />
-          <Button className="my-8 w-full">Sign Up</Button>
-        </form>
+        <FormSchema
+          schema={schema}
+          uiSchema={{
+            rowMap: [
+              ["email"],
+              ["name"],
+              ["password", "confirm_password"],
+              ["phone_number"],
+            ],
+          }}
+          name="sign_up_form"
+          defaultValues={{}}
+          onSubmit={mutate}
+        />
       </Modal>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  const schema = getSchema("User", {
+    omit: [
+      "hash",
+      "salt",
+      "created_at",
+      "updated_at",
+      "assigned_tickets",
+      "owned_tickets",
+      "id",
+      "address_1",
+      "address_2",
+      "city",
+      "state",
+      "comments",
+      "zip_code",
+    ],
+    add: {
+      password: {
+        title: "Password",
+        type: "string",
+        component: "password",
+        description:
+          "Enter a password please include one capital letter, one special character and one number.",
+      },
+      confirm_password: {
+        title: "Confirm Password",
+        type: "string",
+        component: "password",
+        description: "Please confirm your password.",
+      },
+    },
+  });
+  return {
+    props: { schema },
+  };
 }

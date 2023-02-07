@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { useApiRequestHandler } from "@/lib/api";
+import { useApiRequestHandler } from "@/lib/middleware/apiHandler";
 /**
  * logout endpoint
  * Will clear the cookie named token

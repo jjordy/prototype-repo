@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
-import { decodeToken } from "./auth";
 
 type RequestTypes = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | string;
 
@@ -37,13 +36,4 @@ export function useApiRequestHandler(
     }
     return res.status(405).json({ error: "Method Not Allowed" });
   };
-}
-
-export function getAuthToken(req: NextApiRequest) {
-  const { cookies } = req;
-  if (cookies?.["token"]) {
-    const token = decodeToken(cookies["token"]);
-    return token;
-  }
-  return { sub: null };
 }

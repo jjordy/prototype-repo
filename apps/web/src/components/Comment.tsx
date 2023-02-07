@@ -1,10 +1,9 @@
 import { Badge } from "@jjordy/ui";
 import { formatDistanceToNowStrict } from "date-fns";
-import { Prisma } from "@jjordy/data";
-import type { Comment } from "@/lib/data/comment";
-import { serialize } from "@/lib/content";
+import type { Comment } from "@jjordy/sync";
 import Content from "./Content";
 import { Card } from "@jjordy/ui";
+import { Descendant } from "slate";
 
 type CommentProps = {
   comment: Comment;
@@ -23,7 +22,11 @@ export default function Comment({ comment }: CommentProps) {
             })}
         </Badge>
       </div>
-      <Content content={comment?.content?.schema || []} />
+      {comment.content &&
+        typeof comment?.content === "object" &&
+        !Array.isArray(comment?.content) && (
+          <Content content={comment?.content?.schema} />
+        )}
     </Card>
   );
 }
