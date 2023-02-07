@@ -9,11 +9,18 @@ import Link from "next/link";
 import { FormSchema } from "@/components/Forms";
 import useTicketById from "@/hooks/useTicketById";
 import Content from "@/components/Content";
+import useTickets from "@/hooks/useTickets";
+import useAuth from "@/hooks/useAuth";
 
 export default function TicketByIdPage() {
   const { query } = useRouter();
+  const { user } = useAuth();
   const [editTicketContent, setEditTicketContent] = useState(false);
-  const { createComment, updateTicket, ticket } = useTicketById({
+  const {
+    createComment,
+    update,
+    ticketById: ticket,
+  } = useTickets({
     id: Number(query.id),
   });
   const content: any = ticket?.content;
@@ -40,7 +47,7 @@ export default function TicketByIdPage() {
                   }}
                   name="edit_ticket_content_form"
                   debug
-                  onSubmit={updateTicket}
+                  onSubmit={update}
                   schema={{
                     $schema: "http://json-schema.org/draft-07/schema#",
                     properties: {
@@ -123,14 +130,17 @@ export default function TicketByIdPage() {
             <h4 className="text-lg font-medium">Comments</h4>
             <hr className="my-4" />
             <FormSchema
-              defaultValues={{ comment: "" }}
+              defaultValues={{
+                ticket_id: ticket?.id,
+                author_id: user?.id,
+              }}
               name="add_comment_form"
               debug
               onSubmit={createComment}
               schema={{
                 $schema: "http://json-schema.org/draft-07/schema#",
                 properties: {
-                  comment: {
+                  content: {
                     type: "object",
                     component: "rte",
                     title: "Add a comment",

@@ -10,6 +10,7 @@ import { Button, Combobox } from "@jjordy/ui";
 import { api } from "@/lib/clients/rest";
 import useSWR from "swr";
 import { RichTextEditor } from "./RichTextEditor";
+import { trpc } from "@/lib/clients/trpc";
 
 const Label = ({
   id,
@@ -271,18 +272,18 @@ export const ComponentDictionary = {
     getValues,
   }: FieldComponentProps) => {
     const value = getValues(name);
-    const { data } = useSWR("/users", api.get);
+    const { data: { items } = { items: [] } } = trpc.user.list.useQuery({});
     const handleSetUser = (value: { id: number }) => {
-      const user = data?.find((u: any) => u.id === value.id);
+      const user = items?.find((u: any) => u.id === value.id);
       setValue(name, user, { shouldValidate: true });
     };
     return (
       <>
         <Label id={id}>{title}</Label>
-        {data && (
+        {items && (
           <Combobox
             value={value || { id: null, name: "Select a value" }}
-            options={data}
+            options={items}
             onChange={handleSetUser}
           />
         )}

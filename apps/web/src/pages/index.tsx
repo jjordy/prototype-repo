@@ -5,17 +5,12 @@ import { useRouter } from "next/router";
 import cn from "classnames";
 import useAuth from "@/hooks/useAuth";
 import { TicketList } from "@/components/TicketList";
-import { trpc } from "@/lib/clients/trpc";
+import useTickets from "@/hooks/useTickets";
 
 export default function IndexPage() {
   const { pathname } = useRouter();
   const { user } = useAuth();
-  const { data: { items } = { items: [] } } = trpc.ticket.list.useQuery(
-    {
-      id: user?.id,
-    },
-    { enabled: Boolean(user?.id) }
-  );
+  const { tickets, otherTickets } = useTickets({});
   const authenticatedContent = (
     <div className="flex space-x-4">
       <div className="min-w-[250px]">
@@ -49,8 +44,8 @@ export default function IndexPage() {
         </Card>
       </div>
       <div className="w-full">
-        <TicketList tickets={items} title="My Tickets" />
-        {/* <TicketList tickets={otherTickets} title="Other Tickets" /> */}
+        <TicketList tickets={tickets} title="My Tickets" />
+        <TicketList tickets={otherTickets} title="Other Tickets" />
       </div>
     </div>
   );

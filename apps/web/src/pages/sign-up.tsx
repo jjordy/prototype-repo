@@ -2,33 +2,13 @@ import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { Modal } from "@jjordy/ui";
 import { FormSchema } from "@/components/Forms";
-import getSchema from "@/lib/schema";
+import getSchema from "@/lib/form-schema";
 import { JSONFormSchema } from "@jjordy/form-schema";
-import { trpc } from "@/lib/clients/trpc";
-import useToast from "@/hooks/useToast";
-import useAuth from "@/hooks/useAuth";
+import useUser from "@/hooks/useUser";
 
 export default function SignUpPage({ schema }: { schema: JSONFormSchema }) {
-  const { createToast } = useToast();
-  const { setToken } = useAuth();
   const { push } = useRouter();
-  const { mutate } = trpc.user.signup.useMutation({
-    onSuccess: (data) => {
-      createToast({
-        title: "Success",
-        content: "Account created successfully.",
-        variant: "primary",
-      });
-      setToken(data).then(() => push("/profile"));
-    },
-    onError: () => {
-      createToast({
-        title: "Error",
-        content: "Unable to sign you up, please try again later.",
-        variant: "error",
-      });
-    },
-  });
+  const { signup } = useUser();
   return (
     <Layout>
       <Modal
@@ -48,7 +28,7 @@ export default function SignUpPage({ schema }: { schema: JSONFormSchema }) {
           }}
           name="sign_up_form"
           defaultValues={{}}
-          onSubmit={mutate}
+          onSubmit={signup}
         />
       </Modal>
     </Layout>

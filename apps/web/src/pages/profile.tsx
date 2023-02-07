@@ -1,44 +1,17 @@
 import Layout from "@/components/Layout";
 import { FormSchema } from "@/components/Forms/index";
-import { useRouter } from "next/router";
-import useAuth from "@/hooks/useAuth";
 import { NextPageContext } from "next";
-import getSchema from "@/lib/schema";
-import useToast from "@/hooks/useToast";
+import getSchema from "@/lib/form-schema";
 import { Card } from "@jjordy/ui";
-import { trpc } from "@/lib/clients/trpc";
 import { JSONFormSchema } from "@jjordy/form-schema";
+import useUser from "@/hooks/useUser";
 
 type ProfileProps = {
   schema: JSONFormSchema;
 };
 
 export default function MyProfile({ schema }: ProfileProps) {
-  const { push } = useRouter();
-  const { user } = useAuth({ onFail: () => push("/sign-in") });
-  const { createToast } = useToast();
-  const { data: profile, refetch } = trpc.user.byId.useQuery(
-    { id: (user && user.id) || 0 },
-    { enabled: Boolean(user?.id) }
-  );
-
-  const { mutate } = trpc.user.update.useMutation({
-    onSuccess: () => {
-      refetch();
-      createToast({
-        title: "Success",
-        content: "Profile updated",
-        variant: "primary",
-      });
-    },
-    onError: () => {
-      createToast({
-        title: "Error",
-        content: "Unable to update profile",
-        variant: "error",
-      });
-    },
-  });
+  const { profile, update } = useUser();
   return (
     <Layout>
       <Card>
@@ -52,7 +25,7 @@ export default function MyProfile({ schema }: ProfileProps) {
             schema={schema}
             debug
             defaultValues={profile}
-            onSubmit={mutate}
+            onSubmit={update}
           />
         )}
       </Card>

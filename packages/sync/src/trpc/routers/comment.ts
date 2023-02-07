@@ -92,7 +92,7 @@ export const commentRouter = router({
       z.object({
         ticket_id: z.number(),
         author_id: z.number(),
-        content: z.object({ schema: z.object({}) }),
+        content: z.object({ schema: z.array(z.any()) }),
       })
     )
     .mutation(async ({ input }) => {

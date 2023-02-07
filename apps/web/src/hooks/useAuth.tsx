@@ -22,7 +22,15 @@ export default function useAuth({ onFail }: UseAuthProps = {}) {
     if (!isError && !isLoading) {
       return true;
     }
-    if (isError && !isLoading && isFetched && onFail) {
+    if (
+      isError &&
+      !isLoading &&
+      isFetched &&
+      onFail &&
+      // router instance is only available on the client side
+      // so perform the redirect there.
+      typeof window !== "undefined"
+    ) {
       onFail();
     }
     return false;

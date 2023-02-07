@@ -2,34 +2,11 @@ import { Modal } from "@jjordy/ui";
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import { FormSchema } from "@/components/Forms";
-import { trpc } from "@/lib/clients/trpc";
-import useToast from "@/hooks/useToast";
-import useAuth from "@/hooks/useAuth";
+import useUser from "@/hooks/useUser";
 
 export default function SignInPage() {
   const { push } = useRouter();
-  const { createToast } = useToast();
-  const { setToken } = useAuth();
-  const { mutate: signin } = trpc.user.signin.useMutation({
-    onError: (err) => {
-      if (err?.data?.code === "NOT_FOUND") {
-        createToast({
-          title: "Error",
-          content: "Unable to log you in with that information",
-          variant: "error",
-        });
-      } else {
-        createToast({
-          title: "Error",
-          content: "Unable to log you in with that information",
-          variant: "error",
-        });
-      }
-    },
-    onSuccess: (data) => {
-      setToken(data).then(() => push("/"));
-    },
-  });
+  const { signin } = useUser();
   return (
     <Layout>
       <Modal

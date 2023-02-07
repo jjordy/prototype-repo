@@ -1,24 +1,15 @@
 import Layout from "@/components/Layout";
-import { api } from "@/lib";
 import { Modal } from "@jjordy/ui";
 import { useRouter } from "next/router";
 import { FormSchema } from "@jjordy/form-schema";
-import useSWR from "swr";
 import { ComponentDictionary, controls } from "@/components/Forms";
 import { NextPageContext } from "next";
-import getSchema from "@/lib/schema";
-import { useCallback } from "react";
-
-type Ticket = any;
+import getSchema from "@/lib/form-schema";
+import useTickets from "@/hooks/useTickets";
 
 export default function CreateTicket({ schema }: any) {
   const { push } = useRouter();
-  const createTicket = useCallback((data: Ticket) => {
-    api
-      .post("/tickets", data)
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-  }, []);
+  const { create } = useTickets({});
   return (
     <Layout>
       <Modal
@@ -36,7 +27,7 @@ export default function CreateTicket({ schema }: any) {
             controls,
           }}
           components={ComponentDictionary}
-          onSubmit={createTicket}
+          onSubmit={create}
         />
       </Modal>
     </Layout>

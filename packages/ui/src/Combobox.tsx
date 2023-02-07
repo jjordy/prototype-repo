@@ -40,7 +40,7 @@ export function Combobox({ options, onChange, value }: ComboboxProps) {
         <div className="relative mt-1 mb-4">
           <div className="relative w-full cursor-default rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
             <BaseCombobox.Input
-              className="w-full rounded border border-slate-300 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+              className="h-12 w-full rounded-lg border border-slate-300 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
               displayValue={(option: Option) => option.name}
               //@ts-ignore
               onChange={(event) => setQuery(event.target.value)}

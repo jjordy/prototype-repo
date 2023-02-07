@@ -62,7 +62,7 @@ export const ticketRouter = router({
             }
           : undefined,
         orderBy: {
-          created_at: "desc",
+          created_at: "asc",
         },
       });
       let nextCursor: typeof cursor | undefined = undefined;
@@ -90,7 +90,7 @@ export const ticketRouter = router({
       if (!ticket) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: `No post with id '${id}'`,
+          message: `No ticket with id '${id}'`,
         });
       }
       return ticket;
@@ -99,19 +99,24 @@ export const ticketRouter = router({
     .input(
       z.object({
         title: z.string().min(1).max(32),
-        author_id: z.number(),
         content: z.any(),
         status: z.enum(["TODO", "IN_PROGRESS", "BLOCKED", "DONE"]),
         priority: z.enum(["LOW", "MEDIUM", "HIGH", "BLOCKER"]),
         assignee_id: z.number().optional(),
       })
     )
-    .mutation(async ({ input }) => {
-      const post = await client.ticket.create({
-        data: input,
-        select: defaultTicketSelect,
+    .mutation(async ({ input, ctx }) => {
+      if (ctx?.user?.sub) {
+        const post = await client.ticket.create({
+          data: { ...input, author_id: ctx?.user?.sub },
+          select: defaultTicketSelect,
+        });
+        return post;
+      }
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Unauthorized Request",
       });
-      return post;
     }),
   update: publicProcedure
     .input(
