@@ -20,7 +20,7 @@ const NEXT_LDO_KEYWORD = "schemaWalk:nextLdoKeyword";
  *
  * Returns undefined if the path cannot be fully applied.
  */
-export var getSubschema = function(schema: JSONFormSchema, path: string[]) {
+export var getSubschema = function (schema: JSONFormSchema, path: string[]) {
   let subschema = schema;
   for (let p of path) {
     if (subschema === undefined) {
@@ -36,7 +36,7 @@ export var getSubschema = function(schema: JSONFormSchema, path: string[]) {
  * Get a vocabulary based on the $schema keyword, defaulting
  * to the most recent hyper-schema if none is present.
  */
-export var getVocabulary = function(
+export var getVocabulary = function (
   schema: JSONFormSchema,
   defaultVocabulary?: string
 ) {
@@ -49,7 +49,7 @@ export var getVocabulary = function(
         "http://json-schema.org/draft-06/schema#": DRAFT_06,
         "http://json-schema.org/draft-06/hyper-schema#": DRAFT_06_HYPER,
         "https://json-schema.org/draft/2020-12/schema": DRAFT_07,
-        "http://json-schema.org/draft-07/hyper-schema#": DRAFT_07_HYPER
+        "http://json-schema.org/draft-07/hyper-schema#": DRAFT_07_HYPER,
       }[schema.$schema];
     } catch (e) {
       // fall through to default below
@@ -73,7 +73,7 @@ type Watcher =
       parentSchemaObj: JSONFormSchema | undefined,
       rootPath: any[]
     ) => void);
-export var schemaWalk = function(
+export var schemaWalk = function (
   schema: JSONFormSchema,
   preFunc: Watcher,
   postFunc: Watcher,
@@ -97,7 +97,7 @@ export var schemaWalk = function(
  * from a list of subschemas, is not supported and will
  * result in undefined behavior.
  */
-export var subschemaWalk = function(
+export var subschemaWalk = function (
   schema: JSONFormSchema,
   preFunc: Watcher,
   postFunc: Watcher,
@@ -110,8 +110,10 @@ export var subschemaWalk = function(
   }
 
   if (!_isSchema(schema)) {
-    throw "Expected object or boolean as schema, got " +
-      (Array.isArray(schema) ? "array" : typeof schema);
+    throw (
+      "Expected object or boolean as schema, got " +
+      (Array.isArray(schema) ? "array" : typeof schema)
+    );
   }
 
   if (vocabulary === undefined) {
@@ -148,14 +150,14 @@ export var subschemaWalk = function(
  * Otherwise, this package will tolerate boolean schemas with
  * draft-04.
  */
-var _isSchema = function(schema: JSONFormSchema) {
+var _isSchema = function (schema: JSONFormSchema) {
   return (
     (schema instanceof Object && !Array.isArray(schema)) ||
     typeof schema === "boolean"
   );
 };
 
-var _processSchemaKeyword = function(
+var _processSchemaKeyword = function (
   vocabulary: any,
   schema: JSONFormSchema,
   keyword: string,
@@ -170,7 +172,7 @@ var _processSchemaKeyword = function(
 /**
  * Apply callbacks to a single schema.
  */
-var _processSingleSchema = function(
+var _processSingleSchema = function (
   schema: JSONFormSchema,
   keyword: string,
   preFunc: Watcher,
@@ -183,7 +185,7 @@ var _processSingleSchema = function(
 /**
  * Apply callbacks to each schema in an array.
  */
-var _processArrayOfSchemas = function(
+var _processArrayOfSchemas = function (
   schema: JSONFormSchema,
   keyword: string,
   preFunc: Watcher | null,
@@ -199,7 +201,7 @@ var _processArrayOfSchemas = function(
 /**
  * Apply callbacks to either a single schema or an array of schemas
  */
-var _processSingleOrArrayOfSchemas = function(
+var _processSingleOrArrayOfSchemas = function (
   schema: JSONFormSchema,
   keyword: string,
   preFunc: Watcher,
@@ -217,7 +219,7 @@ var _processSingleOrArrayOfSchemas = function(
 /**
  * Apply callbacks to each schema in an object.
  */
-var _processObjectOfSchemas = function(
+var _processObjectOfSchemas = function (
   schema: JSONFormSchema,
   keyword: string,
   preFunc: Watcher,
@@ -235,7 +237,7 @@ var _processObjectOfSchemas = function(
  * property may hold either a subschema or something that
  * is recognizably not a schema, such as a string or number.
  */
-var _processObjectOfMaybeSchemas = function(
+var _processObjectOfMaybeSchemas = function (
   schema: JSONFormSchema,
   keyword: string,
   preFunc: Watcher,
@@ -255,8 +257,8 @@ var _processObjectOfMaybeSchemas = function(
  * Loop over the links and apply the callbacks, while
  * handling LDO keyword deletions by catching NEXT_LDO_KEYWORD.
  */
-var _getProcessLinks = function(ldoVocabulary: Record<string, any>) {
-  return function(
+var _getProcessLinks = function (ldoVocabulary: Record<string, any>) {
+  return function (
     schema: any,
     keyword: string,
     preFunc: Watcher,
@@ -296,7 +298,7 @@ var _getProcessLinks = function(ldoVocabulary: Record<string, any>) {
  * These exceptions allow callers to break out of loops that
  * would otherwise attempt to continue processing deleted subschemas.
  */
-var _apply = function(
+var _apply = function (
   schema: JSONFormSchema,
   path: any[],
   preFunc: Watcher,
@@ -336,7 +338,7 @@ export const DRAFT_04 = {
   not: _processSingleSchema,
   if: _processSingleSchema,
   then: _processSingleSchema,
-  else: _processSingleSchema
+  else: _processSingleSchema,
 };
 
 /**
@@ -347,39 +349,39 @@ export const DRAFT_04 = {
  */
 export const DRAFT_04_HYPER_LDO = {
   schema: _apply,
-  targetSchema: _apply
+  targetSchema: _apply,
 };
 
 export const DRAFT_04_HYPER = Object.assign({}, DRAFT_04, {
-  links: _getProcessLinks(DRAFT_04_HYPER_LDO)
+  links: _getProcessLinks(DRAFT_04_HYPER_LDO),
 });
 
 export const DRAFT_06 = Object.assign({}, DRAFT_04, {
-  propertyNames: _processObjectOfSchemas
+  propertyNames: _processObjectOfSchemas,
 });
 
 export const DRAFT_06_HYPER_LDO = {
   hrefSchema: _apply,
   targetSchema: _apply,
-  submissionSchema: _apply
+  submissionSchema: _apply,
 };
 
 export const DRAFT_06_HYPER = Object.assign({}, DRAFT_06, {
-  links: _getProcessLinks(DRAFT_06_HYPER_LDO)
+  links: _getProcessLinks(DRAFT_06_HYPER_LDO),
 });
 
 export const DRAFT_07 = Object.assign({}, DRAFT_06);
 
 export const DRAFT_07_HYPER_LDO = Object.assign({}, DRAFT_06_HYPER_LDO, {
-  headerSchema: _apply
+  headerSchema: _apply,
 });
 
 export const DRAFT_07_HYPER = Object.assign({}, DRAFT_07, {
-  links: _getProcessLinks(DRAFT_07_HYPER_LDO)
+  links: _getProcessLinks(DRAFT_07_HYPER_LDO),
 });
 
 export const CLOUDFLARE_DOCA = Object.assign({}, DRAFT_04, {
   links: _getProcessLinks(
     Object.assign({}, DRAFT_04_HYPER_LDO, DRAFT_07_HYPER_LDO)
-  )
+  ),
 });

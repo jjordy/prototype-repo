@@ -20,7 +20,7 @@ export function useFormSchema({
   schema,
   defaultValues,
   debug = false,
-  components
+  components,
 }: UseFormSchemaProps) {
   const ctx = useContext(FormContext);
   const formProps = useForm({
@@ -29,7 +29,7 @@ export function useFormSchema({
       const r = await buildResolver(schema, debug, data, context, options);
       return r(data, context, options);
     },
-    defaultValues
+    defaultValues,
   });
   const { fields: fields_base } = useRenderSchema({ schema, formProps });
   const formRef = useRef<HTMLFormElement>(null);
@@ -40,7 +40,7 @@ export function useFormSchema({
   }, []);
   const allComponents: any = { ...ComponentDictionary, ...components };
   const fields = useMemo(() => {
-    return fields_base.map(field => {
+    return fields_base.map((field) => {
       const { type, component, ...fieldProps } = field;
       const error = get(formProps.formState.errors, fieldProps.name, null);
       if (components) {
@@ -54,7 +54,7 @@ export function useFormSchema({
         return {
           ...field,
           Component,
-          error
+          error,
         };
       }
       return field;
@@ -63,6 +63,6 @@ export function useFormSchema({
   return {
     ref: formRef,
     formProps,
-    fields
+    fields,
   };
 }

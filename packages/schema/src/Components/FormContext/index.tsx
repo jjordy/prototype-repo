@@ -4,7 +4,7 @@ import type { FormContext as TFormContext } from "../../types";
 
 export const FormContext = createContext<TFormContext>({
   registerForm: () => {},
-  forms: {}
+  forms: {},
 });
 
 interface FormSchemaProviderProps {
@@ -14,10 +14,12 @@ interface FormSchemaProviderProps {
 export function FormSchemaProvider({ children }: FormSchemaProviderProps) {
   const [forms, setForms] = useState<any>({});
 
-  const registerForm = useCallback((
-    v: { name: string, ref: React.RefObject<HTMLFormElement>}) => {
-    setForms({ ...forms, [v.name]: { name: v.name, ref: v.ref } });
-  }, []);
+  const registerForm = useCallback(
+    (v: { name: string; ref: React.RefObject<HTMLFormElement> }) => {
+      setForms({ ...forms, [v.name]: { name: v.name, ref: v.ref } });
+    },
+    []
+  );
 
   return (
     <FormContext.Provider value={{ registerForm, forms }}>

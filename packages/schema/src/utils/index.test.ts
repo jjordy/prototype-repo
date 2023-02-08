@@ -14,7 +14,7 @@ describe("keysToArray", () => {
       TEST_VALUE_2: "test",
       TEST_VALUE_3: true,
       TEST_VALUE_4: undefined,
-      TEST_VALUE_5: null
+      TEST_VALUE_5: null,
     });
     expect(t).toEqual([1, "test", true, undefined, null]);
   });

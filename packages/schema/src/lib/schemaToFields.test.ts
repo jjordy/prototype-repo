@@ -11,11 +11,11 @@ const baseSchema: JSONFormSchema = {
       type: "object",
       properties: {
         nested: {
-          type: "string"
-        }
-      }
-    }
-  }
+          type: "string",
+        },
+      },
+    },
+  },
 };
 
 const buildSchema = async (schemaParts: any = {}) => {
@@ -27,7 +27,7 @@ describe("schemaToFields", () => {
   it("Should return no fields for an empty schema", async () => {
     const s = await buildSchema();
     expect(schemaToFields(s)).toEqual({
-      normalized: []
+      normalized: [],
     });
   });
   describe("Field names", () => {
@@ -36,9 +36,9 @@ describe("schemaToFields", () => {
         properties: {
           test: {
             type: "string",
-            title: "Hello World"
-          }
-        }
+            title: "Hello World",
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0]).toHaveProperty("name", "test");
@@ -50,19 +50,19 @@ describe("schemaToFields", () => {
             type: "object",
             properties: {
               bar: {
-                type: "string"
+                type: "string",
               },
               bing: {
                 type: "object",
                 properties: {
                   bijou: {
-                    type: "string"
-                  }
-                }
-              }
-            }
-          }
-        }
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0]).toHaveProperty("name", "foo.bar");
@@ -75,10 +75,10 @@ describe("schemaToFields", () => {
           foo: {
             type: "array",
             items: {
-              $ref: "#/$defs/test"
-            }
-          }
-        }
+              $ref: "#/$defs/test",
+            },
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0].items[0]).toHaveProperty("name", "nested");
@@ -90,10 +90,10 @@ describe("schemaToFields", () => {
           foo: {
             type: "array",
             items: {
-              type: "string"
-            }
-          }
-        }
+              type: "string",
+            },
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0].items[0]).toHaveProperty("name", "");
@@ -108,15 +108,15 @@ describe("schemaToFields", () => {
         properties: {
           foo: {
             type: "string",
-            enum: ["Test", "Test 2"]
-          }
-        }
+            enum: ["Test", "Test 2"],
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0]).toHaveProperty("component", "select");
       expect(normalized[0]).toHaveProperty("options", [
         { label: "Test", value: "Test" },
-        { label: "Test 2", value: "Test 2" }
+        { label: "Test 2", value: "Test 2" },
       ]);
     });
   });
@@ -128,9 +128,9 @@ describe("schemaToFields", () => {
         properties: {
           foo: {
             type: "string",
-            format: "date"
-          }
-        }
+            format: "date",
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0]).toHaveProperty("component", "date");
@@ -141,9 +141,9 @@ describe("schemaToFields", () => {
         properties: {
           foo: {
             type: "string",
-            format: "email"
-          }
-        }
+            format: "email",
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0]).toHaveProperty("component", "email");
@@ -154,9 +154,9 @@ describe("schemaToFields", () => {
         properties: {
           foo: {
             type: "string",
-            format: "password"
-          }
-        }
+            format: "password",
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0]).toHaveProperty("component", "password");
@@ -168,9 +168,9 @@ describe("schemaToFields", () => {
           foo: {
             type: "string",
             format: "password",
-            component: "override-password"
-          }
-        }
+            component: "override-password",
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0]).toHaveProperty("component", "override-password");
@@ -182,9 +182,9 @@ describe("schemaToFields", () => {
           foo: {
             type: "string",
             format: "date-time",
-            component: "datetime"
-          }
-        }
+            component: "datetime",
+          },
+        },
       });
       const { normalized } = schemaToFields(s);
       expect(normalized[0]).toHaveProperty("component", "datetime");
@@ -198,9 +198,9 @@ describe("schemaToFields", () => {
           ...baseSchema,
           properties: {
             foo: {
-              anyOf: [{ type: "string" }, { maxLength: 5 }]
-            }
-          }
+              anyOf: [{ type: "string" }, { maxLength: 5 }],
+            },
+          },
         });
         const { normalized } = schemaToFields(s);
         expect(normalized[1]).toHaveProperty("name", "foo");
@@ -214,22 +214,22 @@ describe("schemaToFields", () => {
               type: "object",
               properties: {
                 firstName: {
-                  type: "string"
+                  type: "string",
                 },
                 age: {
-                  type: "number"
-                }
-              }
+                  type: "number",
+                },
+              },
             },
             {
               type: "object",
               properties: {
                 idCode: {
-                  type: "string"
-                }
-              }
-            }
-          ]
+                  type: "string",
+                },
+              },
+            },
+          ],
         });
         const { normalized } = schemaToFields(s);
         console.log(normalized);
@@ -248,19 +248,19 @@ describe("schemaToFields", () => {
               type: "object",
               properties: {
                 firstName: {
-                  type: "string"
-                }
-              }
+                  type: "string",
+                },
+              },
             },
             {
               type: "object",
               properties: {
                 lastName: {
-                  type: "string"
-                }
-              }
-            }
-          ]
+                  type: "string",
+                },
+              },
+            },
+          ],
         });
         const { normalized } = schemaToFields(mergeAllOf(s));
         expect(normalized[0]).toHaveProperty("name", "firstName");
@@ -272,9 +272,9 @@ describe("schemaToFields", () => {
           ...baseSchema,
           properties: {
             foo: {
-              allOf: [{ type: "string" }, { maxLength: 5 }]
-            }
-          }
+              allOf: [{ type: "string" }, { maxLength: 5 }],
+            },
+          },
         });
         const { normalized } = schemaToFields(s);
         expect(normalized[0]).toHaveProperty("name", "foo");

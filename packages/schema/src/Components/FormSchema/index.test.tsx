@@ -5,7 +5,7 @@ import {
   screen,
   waitFor,
   cleanup,
-  act
+  act,
 } from "@testing-library/react";
 import { FormSchema } from ".";
 import { JSONFormSchema } from "../../types";
@@ -17,13 +17,13 @@ const schema: JSONFormSchema = {
   properties: {
     firstName: {
       type: "string",
-      title: "First Name"
+      title: "First Name",
     },
     lastName: {
       type: "string",
-      title: "Last Name"
-    }
-  }
+      title: "Last Name",
+    },
+  },
 };
 const props = {
   schema,
@@ -31,8 +31,8 @@ const props = {
   onSubmit: jest.fn(),
   defaultValues: {
     firstName: "",
-    lastName: ""
-  }
+    lastName: "",
+  },
 };
 describe("Basic Form Schema", () => {
   it("should render the form", async () => {

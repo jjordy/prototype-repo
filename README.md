@@ -4,22 +4,23 @@ Demo @ tbd
 
 ## Table of Contents
 
-* [Getting Started](#getting-started)
-* [Install dependencies](#install)
-* [Running the database](#running-the-database)
-* [Running the development environment](#running-the-development-environment)
-* [Maintainers](#maintainers)
-* [License](#license)
-
+- [Getting Started](#getting-started)
+- [Install dependencies](#install)
+- [Running the database](#running-the-database)
+- [Running the development environment](#running-the-development-environment)
+- [Maintainers](#maintainers)
+- [License](#license)
 
 ## Getting Started
 
 ## Install dependencies
+
 ```bash
   npm install
 ```
 
 ## Running the database
+
 ```bash
   docker compose up
 ```
@@ -32,7 +33,7 @@ Demo @ tbd
 
 ## Maintainers
 
-* Jordan Addison
+- Jordan Addison
 
 ## License
 
