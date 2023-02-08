@@ -8,7 +8,7 @@ import useUser from "@/hooks/useUser";
 
 export default function SignUpPage({ schema }: { schema: JSONFormSchema }) {
   const { push } = useRouter();
-  const { signup } = useUser();
+  const { signup } = useUser({ anonymous: true });
   return (
     <Layout>
       <Modal
@@ -19,6 +19,7 @@ export default function SignUpPage({ schema }: { schema: JSONFormSchema }) {
         <FormSchema
           schema={schema}
           uiSchema={{
+            controls: {},
             rowMap: [
               ["email"],
               ["name"],

@@ -21,7 +21,8 @@
     "zod": "3.20.2"
   },
   "devDependencies": {
-    "@types/node": "18.11.18",
+    "@jjordy/tsconfig": "*",
+    "@types/node": "18.13.0",
     "typescript": "4.9.5"
   }
 }

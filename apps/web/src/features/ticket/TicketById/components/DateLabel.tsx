@@ -9,7 +9,7 @@ export default function DateLabel({
 }) {
   return (
     <div className="flex items-center justify-between font-semibold">
-      <span>Created: </span>
+      <span>{label}</span>
       <span className="rounded-2xl bg-slate-300 px-4 py-1 text-sm font-semibold text-slate-700">
         {date &&
           formatDistanceToNowStrict(date, {

@@ -1,6 +1,6 @@
 import { router, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import client, { Prisma } from "@jjordy/data";
+import { Prisma, client } from "@jjordy/data";
 
 const defaultAuthUserSelect = Prisma.validator<Prisma.UserSelect>()({
   name: true,

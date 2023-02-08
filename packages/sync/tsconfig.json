@@ -1,17 +1,13 @@
 {
+  "extends": "@jjordy/tsconfig/base.json",
   "compilerOptions": {
-    "sourceMap": true,
     "outDir": "dist",
-    "strict": true,
-    "declaration": true,
     "lib": [
-      "esnext",
       "dom",
       "DOM.Iterable"
     ],
-    "esModuleInterop": true
   },
   "include": [
-    "./src",
+    "src",
   ]
 }

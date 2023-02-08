@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "turbo build",
-    "clean": "turbo clean",
+    "clean": "turbo clean && rm -rf node_modules",
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx}\"",
     "lint": "turbo lint",
@@ -24,6 +24,7 @@
     "eslint": "^8.33.0",
     "prettier": "2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.2",
+    "rimraf": "4.1.2",
     "turbo": "^1.7.3"
   }
 }

@@ -1,10 +1,2 @@
-import { PrismaClient } from "@prisma/client";
-declare const prisma: PrismaClient<
-  import(".prisma/client").Prisma.PrismaClientOptions,
-  never,
-  | import(".prisma/client").Prisma.RejectOnNotFound
-  | import(".prisma/client").Prisma.RejectPerOperation
-  | undefined
->;
-export default prisma;
-export { Prisma } from "@prisma/client";
+export * from "./client";
+//# sourceMappingURL=index.d.ts.map

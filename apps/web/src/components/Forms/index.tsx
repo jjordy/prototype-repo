@@ -332,10 +332,19 @@ export const controls: UIControls = {
   ),
 };
 
-export const FormSchema = (props: FormSchemaProps) => (
+type UISchema = FormSchemaProps["uiSchema"] & {
+  // controls?: never;
+  rowMap: string[][];
+};
+
+type LocalFormSchemaProps = FormSchemaProps & {
+  uiSchema?: UISchema;
+};
+
+export const FormSchema = (props: LocalFormSchemaProps) => (
   <BaseFormSchema
-    uiSchema={{ controls, ...(props.uiSchema || {}) }}
     components={{ ...(props.components || {}), ...ComponentDictionary }}
     {...props}
+    uiSchema={{ ...(props.uiSchema || {}), controls }}
   />
 );

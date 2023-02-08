@@ -3,9 +3,15 @@ import { useRouter } from "next/router";
 import useAuth from "./useAuth";
 import useToast from "./useToast";
 
-export default function useUser() {
+export type UseUserProps = {
+  anonymous?: boolean;
+};
+
+export default function useUser(opts?: UseUserProps) {
   const { push } = useRouter();
-  const { user, setToken } = useAuth({ onFail: () => push("/sign-in") });
+  const { user, setToken } = useAuth({
+    onFail: !opts?.anonymous ? () => push("/sign-in") : undefined,
+  });
   const { createToast } = useToast();
   const { data: profile, refetch } = trpc.user.byId.useQuery(
     { id: (user && user.id) || 0 },
