@@ -1,6 +1,6 @@
-import { Prisma } from "@jjordy/data";
+import { Prisma } from "./client";
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
-import { AppRouter } from "./trpc";
+import { AppRouter } from "../trpc";
 
 export const COMMENT_SELECT_DATA: Prisma.CommentSelect = {
   content: true,

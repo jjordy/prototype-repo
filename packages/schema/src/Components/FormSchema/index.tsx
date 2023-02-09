@@ -50,7 +50,7 @@ export const FormSchema = ({
       ctx.registerForm({ name, ref: formRef.current });
     }
   }, []);
-  console.log(typeof children === "function");
+
   return (
     <form
       data-testid={`test_${name}`}

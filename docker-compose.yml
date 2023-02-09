@@ -1,6 +1,14 @@
 version: "3.4"
 
 services:
+  redis:
+    image: redis:7.0.8-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - redis_data:/data
   database:
     image: postgres:14.5
     restart: always
@@ -13,3 +21,4 @@ services:
       POSTGRES_USER: test
 volumes:
   db_data:
+  redis_data:

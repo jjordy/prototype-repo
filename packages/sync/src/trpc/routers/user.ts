@@ -1,8 +1,8 @@
 import { router, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { Prisma, client } from "@jjordy/data";
-import { createPasswordHash, signToken, validPassword } from "../../auth";
+import { Prisma, client } from "@/lib/client";
+import { createPasswordHash, signToken, validPassword } from "@/lib/auth";
 
 const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   id: true,

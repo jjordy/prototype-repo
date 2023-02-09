@@ -1,12 +1,11 @@
 import { Badge } from "@jjordy/ui";
 import { formatDistanceToNowStrict } from "date-fns";
-import type { Comment } from "@jjordy/sync";
 import Content from "./Content";
 import { Card } from "@jjordy/ui";
-import { Descendant } from "slate";
+import { RouterOutput } from "@/lib/clients/trpc";
 
 type CommentProps = {
-  comment: Comment;
+  comment: RouterOutput["comment"]["byId"];
 };
 
 export default function Comment({ comment }: CommentProps) {

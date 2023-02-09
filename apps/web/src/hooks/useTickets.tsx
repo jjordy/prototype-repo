@@ -61,7 +61,8 @@ export default function useTickets({ id }: { id?: number }) {
     onSuccess: (data) => {
       createToast({
         title: "Success",
-        content: "Ticket created!",
+        content:
+          "Your ticket creation is in progress, you will receive another notification when your ticket is ready.",
         variant: "primary",
       });
       refetchTickets();

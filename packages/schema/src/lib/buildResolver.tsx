@@ -17,6 +17,8 @@ export async function buildResolver(
     console.log("RHFS: Data", data);
     console.log(
       "RHFS: Validation result",
+      "OriginalData: ",
+      data,
       await ajvResolver(schema, RHFSCustomSchemaOptions)(data, context, options)
     );
   }

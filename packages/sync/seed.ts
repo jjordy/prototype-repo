@@ -7,8 +7,11 @@ async function main() {
     where: { email: "alice@prisma.io" },
     update: {},
     create: {
-      email: "alice@prisma.io",
+      email: "jordanrileyaddison@gmail.com",
+      salt: "",
+      hash: "",
       name: "Alice",
+      phone_number: "12285470060",
       address_1: "test",
       zip_code: "39507",
       owned_tickets: {
@@ -25,7 +28,10 @@ async function main() {
     update: {},
     create: {
       email: "bob@prisma.io",
+      salt: "",
+      hash: "",
       name: "Bob",
+      phone_number: "12285470060",
     },
   });
   console.log({ alice, bob });

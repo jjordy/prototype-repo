@@ -1,7 +1,7 @@
 import { router, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { client, Prisma } from "@jjordy/data";
+import { Prisma, client } from "@/lib/client";
 
 const defaultCommentSelect = Prisma.validator<Prisma.CommentSelect>()({
   content: true,

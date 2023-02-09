@@ -1,7 +1,8 @@
 import { router, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { Prisma, client } from "@jjordy/data";
+import { Prisma, client } from "@/lib/client";
+import { ticketQueue } from "@/lib/createQueue";
 
 const defaultTicketSelect = Prisma.validator<Prisma.TicketSelect>()({
   title: true,
@@ -9,6 +10,12 @@ const defaultTicketSelect = Prisma.validator<Prisma.TicketSelect>()({
   status: true,
   created_at: true,
   updated_at: true,
+  author: {
+    select: {
+      name: true,
+      id: true,
+    },
+  },
   comments: {
     select: {
       content: true,
@@ -107,11 +114,11 @@ export const ticketRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       if (ctx?.user?.sub) {
-        const post = await client.ticket.create({
-          data: { ...input, author_id: ctx?.user?.sub },
-          select: defaultTicketSelect,
+        console.log(`Creating Ticket Job For User: ${ctx?.user?.sub}`);
+        const job = await ticketQueue.add("ticket", {
+          input: { ...input, author_id: ctx.user.sub },
         });
-        return post;
+        return job;
       }
       throw new TRPCError({
         code: "FORBIDDEN",

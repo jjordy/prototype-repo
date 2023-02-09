@@ -3,9 +3,14 @@
   "compilerOptions": {
     "outDir": "dist",
     "lib": [
-      "dom",
-      "DOM.Iterable"
+      "esnext"
     ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
   },
   "include": [
     "src",

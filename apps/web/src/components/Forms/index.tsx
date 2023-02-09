@@ -274,7 +274,9 @@ export const ComponentDictionary = {
     const { data: { items } = { items: [] } } = trpc.user.list.useQuery({});
     const handleSetUser = (value: { id: number }) => {
       const user = items?.find((u: any) => u.id === value.id);
-      setValue(name, user, { shouldValidate: true });
+      if (user) {
+        setValue(name, { id: user.id }, { shouldValidate: true });
+      }
     };
     return (
       <>

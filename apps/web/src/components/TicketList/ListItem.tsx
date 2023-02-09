@@ -1,8 +1,8 @@
-import { Ticket } from "@jjordy/sync";
 import { formatDistanceToNowStrict } from "date-fns";
 import Link from "next/link";
 import Avatar from "../Avatar";
 import Priority from "../../features/ticket/TicketById/components/Priority";
+import { Ticket } from "@jjordy/sync";
 
 export function TicketListItem({ ticket }: { ticket: Ticket }) {
   return (
